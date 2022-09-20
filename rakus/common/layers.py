@@ -3,6 +3,7 @@ import numpy as np
 from common.functions import *
 from common.util import im2col, col2im
 
+""""内容変更済"""
 
 class Relu:
     def __init__(self):
@@ -282,3 +283,20 @@ class Pooling:
         dx = col2im(dcol, self.x.shape, self.pool_h, self.pool_w, self.stride, self.pad)
         
         return dx
+
+
+class Tanh:
+    def __init__(self):
+        self.x = None
+        self.out = None
+        
+    def forward(self, x):
+        self.out = np.tanh(x)
+        return self.out
+    
+    def backward(self, dout):
+        dx = dout * (1- self.x **2)
+        return dx
+
+
+        

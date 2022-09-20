@@ -1,10 +1,6 @@
 # coding: utf-8
 import numpy as np
 
-"""
-この部分を追加した
-"""
-
 
 def identity_function(x):
     return x
@@ -57,14 +53,3 @@ def cross_entropy_error(y, t):
 def softmax_loss(X, t):
     y = softmax(X)
     return cross_entropy_error(y, t)
-
-def wave_func(x):                           # 確認済み
-    out = np.exp(- np.sum(x**2)/2)
-    return out
-
-x = np.array([1, 2])
-print(x**2)
-print(np.sum(x**2))
-print(-np.sum(x**2)/2)
-print(wave_func(x))
-print(np.exp(-2.5))
