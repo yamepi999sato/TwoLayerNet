@@ -1,6 +1,7 @@
 # coding: utf-8
 import sys, os
-sys.path.append(os.pardir)  # 親ディレクトリのファイルをインポートするための設定
+from os.path import dirname, abspath
+sys.path.append(dirname(dirname(abspath(__file__))))  # 親ディレクトリのファイルをインポートするための設定
 import numpy as np
 from common.layers import *
 from common.gradient import numerical_gradient
