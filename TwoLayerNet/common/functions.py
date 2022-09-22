@@ -1,9 +1,6 @@
 # coding: utf-8
 import numpy as np
 
-"""
-この部分を追加した
-"""
 
 
 def identity_function(x):

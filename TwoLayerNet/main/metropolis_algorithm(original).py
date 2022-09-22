@@ -4,16 +4,13 @@ Created on Thu Sep 22 12:55:38 2022
 
 @author: yamep
 """
-import sys, os
-from os.path import dirname, abspath
-sys.path.append(dirname(dirname(abspath(__file__)))) 
-from common.layers import *
+
 import random
 import math
 import matplotlib.pyplot as plt
 
 def p(x):
-    return np.power(2/np.pi, 1/4) * wave_func(x)
+    return 1/math.sqrt(2*math.pi)*math.exp(-x**2/2)
 
 x = 0
 sdata=[ ]
