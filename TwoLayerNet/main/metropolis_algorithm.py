@@ -15,11 +15,13 @@ import matplotlib.pyplot as plt
 def p(x):
     return np.power(2/np.pi, 1/4) * wave_func(x)
 
-x = 0
+N = 2
+x = np.zeros(N)
+print(x)
 sdata=[ ]
 cnt=0
-for _ in range(1000000):
-    y = x + random.uniform(-1,1)
+for _ in range(100):
+    y = x + np.random.uniform(-1,1,N)
     alpha = min(1, p(y)/p(x))
     r = random.uniform(0,1)
     if r > alpha:
@@ -29,6 +31,7 @@ for _ in range(1000000):
     if cnt%10==0:
         sdata.append(x)
 
+print(sdata.shape)
 xdata=[]
 ydata=[]
 x=-5.0
@@ -36,7 +39,9 @@ while x<5.0:
     xdata.append(x)
     ydata.append(p(x))
     x += 0.01
-
+    
+#print(sdata)
+"""
 plt.title("NORMAL DISTRIBUTION")
 plt.plot(xdata,ydata,color=(0.0,0.0,0.7))
 plt.hist(sdata, bins=100, density=True, color=(1.0,0,0.0))
@@ -45,3 +50,4 @@ plt.ylabel('P(x)')
 plt.legend()
 plt.grid(True)
 plt.show()
+"""

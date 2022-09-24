@@ -7,9 +7,28 @@ from dataset.mnist import load_mnist
 from main.two_layer_net import TwoLayerNet
 
 # データの読み込み
-(x_train, t_train), (x_test, t_test) = load_mnist(normalize=True, one_hot_label=True)
+# 元のコード
+#(x_train, t_train), (x_test, t_test) = load_mnist(normalize=True, one_hot_label=True)
 
-network = TwoLayerNet(input_size=784, hidden_size=50, output_size=10)
+
+# データの読み込み
+# 一様乱数
+x_train = np.random.rand(60000, 3)          # x_train.shape = (サンプル数, 粒子数)
+t_train = np.random.rand(60000, 1)
+x_test = np.random.rand(60000, 3)          # x_train.shape = (サンプル数, 粒子数)
+t_test = np.random.rand(60000, 1)
+
+
+# データの読み込み
+# メトロポリス法
+
+print(x_train.shape)
+print(t_train.shape)
+print(x_test.shape)
+print(t_test.shape)
+
+
+network = TwoLayerNet(input_size=3, hidden_size=50, output_size=1)
 
 iters_num = 10000
 train_size = x_train.shape[0]
