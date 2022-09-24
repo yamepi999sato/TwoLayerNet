@@ -22,6 +22,7 @@ t_test = np.random.rand(60000, 1)
 # データの読み込み
 # メトロポリス法
 
+
 print(x_train.shape)
 print(t_train.shape)
 print(x_test.shape)

@@ -23,7 +23,7 @@ cnt=0
 for _ in range(100):
     y = x + np.random.uniform(-1,1,N)
     alpha = min(1, p(y)/p(x))
-    r = random.uniform(0,1)
+    r = np.random.uniform(0,1)
     if r > alpha:
         y = x
     x = y
@@ -31,7 +31,7 @@ for _ in range(100):
     if cnt%10==0:
         sdata.append(x)
 
-print(sdata.shape)
+#print(sdata.shape)
 xdata=[]
 ydata=[]
 x=-5.0
