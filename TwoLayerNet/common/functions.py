@@ -48,6 +48,7 @@ def cross_entropy_error(y, t):
         t = t.argmax(axis=1)
              
     batch_size = y.shape[0]
+
     return -np.sum(np.log(y[np.arange(batch_size), t] + 1e-7)) / batch_size
 
 
@@ -67,6 +68,6 @@ x = np.array([[1, 2],[3,4]])
 #print(x**2)
 #print(np.sum((x**2), axis=1))
 #print(-np.sum((x**2)/2, axis=1))
-print(np.exp(-np.sum((x**2)/2, axis=1)))
-print(wave_func(x))
+#print(np.exp(-np.sum((x**2)/2, axis=1)))
+#print(wave_func(x))
 #print(np.exp(-2.5))

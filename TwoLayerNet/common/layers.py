@@ -123,7 +123,14 @@ class Cross_Entropy_Error:
     def backward(self, dout):
         dx = -self.t/self.y
         return dx
-
+"""
+# SoftmaxWithLossとSoftmax,Cross_Entropy_Errorの動作確認
+x = np.array([[1, 2], [3, 4]])
+t = np.array([5, 6])
+Soft = SoftmaxWithLoss()
+loss1 = Soft.forward(x, t)
+#print(loss1)
+"""
 
 class Dropout:
     """
@@ -342,4 +349,5 @@ class Exp:
     def backward(self, dout):
         dx = dout
         return dout
-        
+
+
