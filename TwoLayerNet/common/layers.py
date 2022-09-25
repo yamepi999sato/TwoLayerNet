@@ -3,7 +3,6 @@ import numpy as np
 from common.functions import *
 from common.util import im2col, col2im
 
-""""内容変更済"""
 
 class Relu:
     def __init__(self):
@@ -301,5 +300,16 @@ class Tanh:
         dx = dout * (1- self.x **2)
         return dx
 
-
+class Exp:
+    def __init__(self):
+        self.x = None
+        self.out = None
+        
+    def forward(self, x):
+        self.out = np.exp(x)
+        return out
+    
+    def backward(self, dout):
+        dx = dout
+        return dout
         
