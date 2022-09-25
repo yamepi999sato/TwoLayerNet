@@ -63,8 +63,9 @@ def wave_func(x):                           # 確認済み
         out = np.exp(- np.sum((x**2)/2, axis=0))
     return out
 
-def Overlap(x):
+def Overlap(x, t):
     N_sample = x.shape[0]                   # xの行の数(=M)
+    t_per_y = t 
     
 x = np.array([[1, 2],[3,4]])
 #print(x**2)

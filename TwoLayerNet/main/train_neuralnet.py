@@ -72,10 +72,12 @@ print(t_test.shape)         # (M, 1)
 
 network = TwoLayerNet(input_size=2, hidden_size=50, output_size=1)
 
-iters_num = 10000
+iters_num = 1
 train_size = x_train.shape[0]
 batch_size = 100
 learning_rate = 0.1
+print(train_size)
+
 
 train_loss_list = []
 train_acc_list = []
@@ -84,8 +86,10 @@ test_acc_list = []
 iter_per_epoch = max(train_size / batch_size, 1)
 
 for i in range(iters_num):
-    batch_mask = np.random.choice(train_size, batch_size)
+    batch_mask = np.random.choice(train_size, batch_size)   # 0からtrain_sizeまでの整数をランダムにbatch_size個抽出して1次元配列にする
+    #print(batch_mask)
     x_batch = x_train[batch_mask]
+    print(x_batch)
     t_batch = t_train[batch_mask]
     
     # 勾配
@@ -104,4 +108,4 @@ for i in range(iters_num):
         test_acc = network.accuracy(x_test, t_test)
         train_acc_list.append(train_acc)
         test_acc_list.append(test_acc)
-        print(train_acc, test_acc)
+        #print(train_acc, test_acc)
