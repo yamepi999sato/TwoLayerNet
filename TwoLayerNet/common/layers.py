@@ -95,6 +95,36 @@ class SoftmaxWithLoss:
         return dx
 
 
+class Softmax:
+    def __init__(self):
+        self.y = None
+    
+    def forward(self, x):
+        self.y = softmax(x)
+        return self.y
+    
+    def backward(self, dout):
+        dx = self.y * (1-self.y)
+        return dx
+
+
+class Cross_Entropy_Error:
+    def __init__(self):
+        self.loss = None
+        self.y = None
+        self.t = None
+    
+    def forward(self, y, t):
+        self.y = y
+        self.t = t
+        self.loss = cross_entropy_error(y, t)
+        return self.loss
+    
+    def backward(self, dout):
+        dx = -self.t/self.y
+        return dx
+
+
 class Dropout:
     """
     http://arxiv.org/abs/1207.0580

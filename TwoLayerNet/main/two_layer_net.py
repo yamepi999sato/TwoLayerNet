@@ -23,8 +23,9 @@ class TwoLayerNet:
         self.layers['Affine1'] = Affine(self.params['W1'], self.params['b1'])
         self.layers['Relu1'] = Relu()
         self.layers['Affine2'] = Affine(self.params['W2'], self.params['b2'])
+        self.layers['Softmax2'] = Softmax()
 
-        self.lastLayer = SoftmaxWithLoss()
+        self.lastLayer = Cross_Entropy_Error()
         
     def predict(self, x):
         for layer in self.layers.values():
