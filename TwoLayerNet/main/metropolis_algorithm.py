@@ -15,12 +15,14 @@ import matplotlib.pyplot as plt
 def p(x):
     return np.power(2/np.pi, 1/4) * wave_func(x)
 
-N = 2
+N = 1
+i = 100000
+M = int(i/10)
 x = np.zeros(N)
-print(x)
-sdata=[ ]
+#sdata= np.empty((int(i/10)+1, N))
+sdata= np.ones((M, N))
 cnt=0
-for _ in range(100):
+for _ in range(i):
     y = x + np.random.uniform(-1,1,N)
     alpha = min(1, p(y)/p(x))
     r = np.random.uniform(0,1)
@@ -29,25 +31,29 @@ for _ in range(100):
     x = y
     cnt += 1
     if cnt%10==0:
-        sdata.append(x)
-
-#print(sdata.shape)
-xdata=[]
-ydata=[]
-x=-5.0
-while x<5.0:
-    xdata.append(x)
-    ydata.append(p(x))
-    x += 0.01
+        sdata[int(cnt/10)-1]= x
     
+        
 #print(sdata)
-"""
+split = 100
+xdata= np.zeros(split)
+ydata= np.zeros(split)
+t = -5.0
+cnt = 0
+for cnt in range(split):
+    xdata[cnt] = t
+    ydata[cnt] = p(np.array([t, t]))
+    t += 10/split
+print(xdata.shape)
+print(ydata.shape)
+    
+print(sdata.shape)
+
 plt.title("NORMAL DISTRIBUTION")
 plt.plot(xdata,ydata,color=(0.0,0.0,0.7))
-plt.hist(sdata, bins=100, density=True, color=(1.0,0,0.0))
+plt.hist(sdata[:, 0], bins=100, density=True, color=(1.0,0,0.0))
 plt.xlabel('x')
 plt.ylabel('P(x)')
 plt.legend()
 plt.grid(True)
 plt.show()
-"""
