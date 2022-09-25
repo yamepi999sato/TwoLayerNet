@@ -120,7 +120,7 @@ class Cross_Entropy_Error:
         self.loss = cross_entropy_error(y, t)
         return self.loss
     
-    def backward(self, dout):
+    def backward(self, dout=1):
         dx = -self.t/self.y
         return dx
 """
@@ -132,6 +132,11 @@ loss1 = Soft.forward(x, t)
 #print(loss1)
 """
 
+class Minus_Overlap():
+    def __init__(self):
+            
+        
+        
 class Dropout:
     """
     http://arxiv.org/abs/1207.0580
