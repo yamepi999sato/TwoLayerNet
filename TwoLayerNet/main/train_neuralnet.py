@@ -59,18 +59,18 @@ for _ in range(i):
     if cnt%10==0:
         x_test[int(cnt/10)-1]= x
 
-t_train = wave_func(x_train)
-t_test = wave_func(x_test)
-print(x_train)
-print(t_train)
-
-#print(x_train.shape)        # (M, N)
-#print(t_train.shape)        # (M, 1)
-#print(x_test.shape)         # (M, N)
-#print(t_test.shape)         # (M, 1)
-
+t_train = wave_func(x_train).reshape(-1, 1)
+t_test = wave_func(x_test).reshape(-1, 1)
+#print(x_train)
+#print(t_train)
 """
-network = TwoLayerNet(input_size=3, hidden_size=50, output_size=1)
+print(x_train.shape)        # (M, N)
+print(t_train.shape)        # (M, 1)
+print(x_test.shape)         # (M, N)
+print(t_test.shape)         # (M, 1)
+"""
+
+network = TwoLayerNet(input_size=2, hidden_size=50, output_size=1)
 
 iters_num = 10000
 train_size = x_train.shape[0]
@@ -105,4 +105,3 @@ for i in range(iters_num):
         train_acc_list.append(train_acc)
         test_acc_list.append(test_acc)
         print(train_acc, test_acc)
-"""

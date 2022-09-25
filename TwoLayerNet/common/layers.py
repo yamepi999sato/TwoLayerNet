@@ -77,6 +77,9 @@ class SoftmaxWithLoss:
     def forward(self, x, t):
         self.t = t
         self.y = softmax(x)
+        #print("x: " + str(x.shape))
+        #print("t :" + str(self.t.shape))
+        #print("y :" + str(self.y.shape))
         self.loss = cross_entropy_error(self.y, self.t)
         
         return self.loss

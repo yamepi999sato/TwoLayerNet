@@ -56,7 +56,10 @@ def softmax_loss(X, t):
     return cross_entropy_error(y, t)
 
 def wave_func(x):                           # 確認済み
-    out = np.exp(- np.sum((x**2)/2, axis=1))
+    if x.ndim == 2:
+        out = np.exp(- np.sum((x**2)/2, axis=1))
+    elif x.ndim == 1:
+        out = np.exp(- np.sum((x**2)/2, axis=0))
     return out
 
 x = np.array([[1, 2],[3,4]])
