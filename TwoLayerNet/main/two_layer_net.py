@@ -25,8 +25,8 @@ class TwoLayerNet:
         self.layers['Affine2'] = Affine(self.params['W2'], self.params['b2'])
         self.layers['Exp2'] = Exp()
 
-        self.lastLayer = SoftmaxWithLoss()
-        # self.lastLayer = Minus_Overlap()
+        #self.lastLayer = SoftmaxWithLoss()
+        self.lastLayer = Minus_Overlap()
         
     def predict(self, x):
         for layer in self.layers.values():
@@ -46,6 +46,11 @@ class TwoLayerNet:
         
         accuracy = np.sum(y == t) / float(x.shape[0])
         return accuracy
+    
+    def error(self, x, t):
+        y = self.predict(x)
+        error = np.mean((y-t)/t)
+        return error
         
     # x:入力データ, t:教師データ
     def numerical_gradient(self, x, t):

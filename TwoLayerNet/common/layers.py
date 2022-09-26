@@ -134,18 +134,18 @@ loss1 = Soft.forward(x, t)
 
 class Minus_Overlap():
     def __init__(self):
-        self.x = None
+        self.y = None
         self.t = None
         self.out = None
     
-    def forward(self, x, t):
-        self.x = x
+    def forward(self, y, t):
+        self.y = y
         self.t = t
-        self.out = - Overlap(self.x, self.t)
+        self.out = - Overlap(self.y, self.t)
         return self.out
 
-    def backward(self, dout):
-        
+    def backward(self, dout=1):
+        dx = - diff_Overlap(self.y, self.t)
         return dx
         
         
