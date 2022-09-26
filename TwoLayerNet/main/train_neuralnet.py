@@ -3,9 +3,9 @@ import sys, os
 from os.path import dirname, abspath
 sys.path.append(dirname(dirname(abspath(__file__)))) 
 import numpy as np
-import matplotlib.pyplot as plt
 import random
 import math
+import matplotlib.pyplot as plt
 from common.layers import *
 from dataset.mnist import load_mnist
 from main.two_layer_net import TwoLayerNet
@@ -26,13 +26,14 @@ t_test = np.random.rand(60000, 1)
 
 # データの読み込み
 # メトロポリス法
-def p(x):
-    return ( np.power(2/np.pi, 1/4) * wave_func(x) )**2
+N = 3
+def p(x, N):
+    return ( wave_func(x, N) )**2
 
-N = 2
-i = 10000
+
+i = 100000
 M = int(i/10)
-#sdata= np.empty((int(i/10)+1, N))
+sdata= np.empty((M+1, N))
 
 x_train = np.empty((M, N))
 x_test = np.empty((M, N))
@@ -42,7 +43,7 @@ cnt=0
 
 for _ in range(i):
     y = x + np.random.uniform(-0.1,0.1,N)
-    alpha = min(1, p(y)/p(x))
+    alpha = min(1, p(y, N)/p(x, N))
     r = np.random.uniform(0,1)
     if r > alpha:
         y = x
@@ -55,7 +56,7 @@ cnt = 0
 x = np.zeros(N)
 for _ in range(i):
     y = x + np.random.uniform(-1,1,N)
-    alpha = min(1, p(y)/p(x))
+    alpha = min(1, p(y, N)/p(x, N))
     r = np.random.uniform(0,1)
     if r > alpha:
         y = x
@@ -63,33 +64,9 @@ for _ in range(i):
     cnt += 1
     if cnt%10==0:
         x_test[int(cnt/10)-1]= x
-        
-        
-split = 100
-xdata= np.zeros(split)
-ydata= np.zeros(split)
-t = -5.0
-cnt = 0
-for cnt in range(split):
-    xdata[cnt] = t
-    ydata[cnt] = p(np.array([t, 0]))
-    t += 10/split
-print(xdata.shape)
-print(ydata.shape)
-    
-print(sdata.shape)
 
-plt.title("Metropolis sampling of Ψ(x_1, x_2=0)")
-plt.plot(xdata,ydata,color=(0.0,0.0,0.7))
-plt.hist(sdata[:, 0], bins=100, density=True, color=(1.0,0,0.0))
-plt.xlabel('x_1')
-plt.ylabel('P(x)=Ψ(x_1, x_2)')
-plt.legend()
-plt.grid(True)
-plt.show()
-
-t_train = wave_func(x_train).reshape(-1, 1)
-t_test = wave_func(x_test).reshape(-1, 1)
+t_train = wave_func(x_train, N).reshape(-1, 1)
+t_test = wave_func(x_test, N).reshape(-1, 1)
 #print(x_train)
 #print(t_train)
 """
@@ -98,7 +75,27 @@ print(t_train.shape)        # (M, 1)
 print(x_test.shape)         # (M, N)
 print(t_test.shape)         # (M, 1)
 """
+split = 100
+xdata= np.empty(split)
+ydata= np.empty(split)
+t = -5.0
+cnt = 0
+for cnt in range(split):
+    xdata[cnt] = t
+    ydata[cnt] = p(np.array([t, t, t]), N)
+    t += 10/split
+    
+plt.title("Metropolis sampling of Ψ(x_1, x_2, x_3)^2, N=" + str(N) + ", M=10000" + ", x_1=x_2=x_3")
+plt.plot(xdata,ydata,color=(0.0,0.0,0.7))
+plt.hist(x_train[:, 0], bins=100, density=True, color=(1.0,0,0.0))
+plt.xlabel('x_1=x_2=x_3')
+plt.ylabel('P(x_1, x_2, x_3)=Ψ^2')
+plt.legend()
+#plt.ylim(-0.5, 2)
+plt.grid(True)
+plt.show()
 
+"""
 network = TwoLayerNet(input_size=N, hidden_size=5, output_size=1)
 
 iters_num = 1
@@ -152,3 +149,5 @@ for i in range(iters_num):
         #train_err_list[j] = train_error
         #test_err_list[j] = test_error
         #print(train_err)
+        
+"""

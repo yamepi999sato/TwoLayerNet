@@ -8,6 +8,7 @@ import sys, os
 from os.path import dirname, abspath
 sys.path.append(dirname(dirname(abspath(__file__)))) 
 from common.layers import *
+import numpy as np
 import random
 import math
 import matplotlib.pyplot as plt
@@ -16,7 +17,7 @@ def p(x):
     return np.power(2/np.pi, 1/4) * wave_func(x)
 
 N = 2
-i = 10
+i = 100000
 M = int(i/10)
 x = np.zeros(N)
 #sdata= np.empty((int(i/10)+1, N))
@@ -50,11 +51,12 @@ for cnt in range(split):
     
 #print(sdata.shape)
 
-plt.title("NORMAL DISTRIBUTION")
+plt.title("Metropolis sampling of Ψ(x_1)^2")
 plt.plot(xdata,ydata,color=(0.0,0.0,0.7))
 plt.hist(sdata[:, 0], bins=100, density=True, color=(1.0,0,0.0))
-plt.xlabel('x')
-plt.ylabel('P(x)')
+plt.xlabel('x_1')
+plt.ylabel('P(x_1)')
 plt.legend()
+#plt.ylim(-0.5, 2)
 plt.grid(True)
 plt.show()

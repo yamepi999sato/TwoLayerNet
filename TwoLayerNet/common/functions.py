@@ -56,11 +56,11 @@ def softmax_loss(X, t):
     y = softmax(X)
     return cross_entropy_error(y, t)
 
-def wave_func(x):                           # 確認済み
+def wave_func(x, N):                           # 確認済み
     if x.ndim == 2:
-        out = np.exp(- np.sum((x**2)/2, axis=1))
+        out = np.power(2/np.pi, N/4) * np.exp(- np.sum((x**2)/2, axis=1))
     elif x.ndim == 1:
-        out = np.exp(- np.sum((x**2)/2, axis=0))
+        out = np.power(2/np.pi, N/4) * np.exp(- np.sum((x**2)/2, axis=0))
     return out
 
 def Overlap(y, t):                          # 確認済み
@@ -81,6 +81,6 @@ def diff_Overlap(y, t):                     # 確認済み
 
 x = np.array([[1],[1]])
 t = np.array([[2],[3]])
-print(Overlap(x, t))
-print(diff_Overlap(x, t))
+#print(Overlap(x, t))
+#print(diff_Overlap(x, t))
 
