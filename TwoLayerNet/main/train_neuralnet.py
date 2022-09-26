@@ -70,7 +70,7 @@ print(x_test.shape)         # (M, N)
 print(t_test.shape)         # (M, 1)
 """
 
-network = TwoLayerNet(input_size=2, hidden_size=50, output_size=1)
+network = TwoLayerNet(input_size=N, hidden_size=50, output_size=1)
 
 iters_num = 1
 train_size = x_train.shape[0]
@@ -89,8 +89,9 @@ for i in range(iters_num):
     batch_mask = np.random.choice(train_size, batch_size)   # 0からtrain_sizeまでの整数をランダムにbatch_size個抽出して1次元配列にする
     #print(batch_mask)
     x_batch = x_train[batch_mask]
-    print(x_batch)
+    print(x_batch.shape)                                    # (batch_size, N)
     t_batch = t_train[batch_mask]
+    print(t_batch.shape)                                    # (batch_size, 1)
     
     # 勾配
     #grad = network.numerical_gradient(x_batch, t_batch)
