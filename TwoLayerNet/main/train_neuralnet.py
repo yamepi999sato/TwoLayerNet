@@ -27,20 +27,18 @@ def p(x):
     return np.power(2/np.pi, 1/4) * wave_func(x)
 
 N = 2
-i = 100
+i = 10
 M = int(i/10)
 #sdata= np.empty((int(i/10)+1, N))
 
 x_train = np.empty((M, N))
 x_test = np.empty((M, N))
-print(x_train)
-print("\n")
 
 x = np.zeros(N)
 cnt=0
 
 for _ in range(i):
-    y = x + np.random.uniform(-1,1,N)
+    y = x + np.random.uniform(-0.1,0.1,N)
     alpha = min(1, p(y)/p(x))
     r = np.random.uniform(0,1)
     if r > alpha:
@@ -65,7 +63,7 @@ for _ in range(i):
 
 t_train = wave_func(x_train).reshape(-1, 1)
 t_test = wave_func(x_test).reshape(-1, 1)
-print(x_train)
+#print(x_train)
 #print(t_train)
 """
 print(x_train.shape)        # (M, N)
@@ -73,12 +71,12 @@ print(t_train.shape)        # (M, 1)
 print(x_test.shape)         # (M, N)
 print(t_test.shape)         # (M, 1)
 """
-"""
-network = TwoLayerNet(input_size=N, hidden_size=50, output_size=1)
 
-iters_num = 2
+network = TwoLayerNet(input_size=N, hidden_size=5, output_size=1)
+
+iters_num = 1
 train_size = x_train.shape[0]
-batch_size = 100
+batch_size = 3
 learning_rate = 0.1
 #print(train_size)
 
@@ -126,5 +124,4 @@ for i in range(iters_num):
         test_acc_list.append(test_acc)
         #train_err_list[j] = train_error
         #test_err_list[j] = test_error
-        print(train_err)
-"""
+        #print(train_err)
