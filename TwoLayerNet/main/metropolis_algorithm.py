@@ -15,8 +15,8 @@ import matplotlib.pyplot as plt
 def p(x):
     return np.power(2/np.pi, 1/4) * wave_func(x)
 
-N = 1
-i = 100000
+N = 2
+i = 10
 M = int(i/10)
 x = np.zeros(N)
 #sdata= np.empty((int(i/10)+1, N))
@@ -29,11 +29,12 @@ for _ in range(i):
     if r > alpha:
         y = x
     x = y
+    #print(x)
     cnt += 1
     if cnt%10==0:
         sdata[int(cnt/10)-1]= x
     
-        
+
 #print(sdata)
 split = 100
 xdata= np.zeros(split)
@@ -44,10 +45,10 @@ for cnt in range(split):
     xdata[cnt] = t
     ydata[cnt] = p(np.array([t, t]))
     t += 10/split
-print(xdata.shape)
-print(ydata.shape)
+#print(xdata.shape)
+#print(ydata.shape)
     
-print(sdata.shape)
+#print(sdata.shape)
 
 plt.title("NORMAL DISTRIBUTION")
 plt.plot(xdata,ydata,color=(0.0,0.0,0.7))

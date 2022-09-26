@@ -3,6 +3,9 @@ import sys, os
 from os.path import dirname, abspath
 sys.path.append(dirname(dirname(abspath(__file__)))) 
 import numpy as np
+import matplotlib.pyplot as plt
+import random
+import math
 from common.layers import *
 from dataset.mnist import load_mnist
 from main.two_layer_net import TwoLayerNet
@@ -24,10 +27,10 @@ t_test = np.random.rand(60000, 1)
 # データの読み込み
 # メトロポリス法
 def p(x):
-    return np.power(2/np.pi, 1/4) * wave_func(x)
+    return ( np.power(2/np.pi, 1/4) * wave_func(x) )**2
 
 N = 2
-i = 10
+i = 10000
 M = int(i/10)
 #sdata= np.empty((int(i/10)+1, N))
 
@@ -60,6 +63,30 @@ for _ in range(i):
     cnt += 1
     if cnt%10==0:
         x_test[int(cnt/10)-1]= x
+        
+        
+split = 100
+xdata= np.zeros(split)
+ydata= np.zeros(split)
+t = -5.0
+cnt = 0
+for cnt in range(split):
+    xdata[cnt] = t
+    ydata[cnt] = p(np.array([t, 0]))
+    t += 10/split
+print(xdata.shape)
+print(ydata.shape)
+    
+print(sdata.shape)
+
+plt.title("Metropolis sampling of Ψ(x_1, x_2=0)")
+plt.plot(xdata,ydata,color=(0.0,0.0,0.7))
+plt.hist(sdata[:, 0], bins=100, density=True, color=(1.0,0,0.0))
+plt.xlabel('x_1')
+plt.ylabel('P(x)=Ψ(x_1, x_2)')
+plt.legend()
+plt.grid(True)
+plt.show()
 
 t_train = wave_func(x_train).reshape(-1, 1)
 t_test = wave_func(x_test).reshape(-1, 1)
