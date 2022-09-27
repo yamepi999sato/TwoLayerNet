@@ -12,6 +12,10 @@ class TwoLayerNet:
 
     def __init__(self, input_size, hidden_size, output_size, weight_init_std = 1):
         # 重みの初期化
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.output_size = output_size
+        
         self.params = {}
         self.params['W1'] = weight_init_std * np.random.randn(input_size, hidden_size)
         self.params['b1'] = np.zeros(hidden_size)
@@ -51,6 +55,14 @@ class TwoLayerNet:
         y = self.predict(x)
         error = np.mean((y-t)/t)
         return error
+    
+    def t(self, t):
+        return t
+    
+    def y(self, x):
+        y = self.predict(x)
+        return y
+    
         
     # x:入力データ, t:教師データ
     def numerical_gradient(self, x, t):

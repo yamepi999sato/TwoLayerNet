@@ -102,10 +102,10 @@ plt.show()
 """
 network = TwoLayerNet(input_size=N, hidden_size=5, output_size=1)
 
-iters_num = 10000
+iters_num = 1000
 train_size = x_train.shape[0]
 batch_size = 5
-learning_rate = 0.1
+learning_rate = 0.001
 #print(train_size)
 
 
@@ -115,10 +115,22 @@ test_acc_list = []
 
 train_err_list =[]
 train_err_list = []
+train_y_list = []
 #train_err_list = np.zeros(iters_num)
 #test_err_list = np.zeros(iters_num)
 
 iter_per_epoch = max(train_size / batch_size, 1)
+
+#条件を表示
+print("input_size(入力層ユニット数) = N(粒子数): " + str(N) + "(個)")
+print("hidden_size(隠れ層ユニット数): " + str(network.hidden_size) + str("個"))
+print("output_size(出力層ユニット数): " + str(network.output_size) + str("個"))
+print("train_size(全サンプル数): " + str(train_size) + "個")
+print("batch_size(バッチサイズ): " + str(batch_size) + "個")
+print("iter_per_epoch(1エポックの更新回数): " + str(iter_per_epoch) + "回")
+print("learning_rate(学習率): " + str(learning_rate))
+print("\n")
+print("train_err(誤差)")
 
 for i in range(iters_num):
     batch_mask = np.random.choice(train_size, batch_size)   # 0からtrain_sizeまでの整数をランダムにbatch_size個抽出して1次元配列にする
@@ -140,17 +152,27 @@ for i in range(iters_num):
     train_loss_list.append(loss)
     
     if i % iter_per_epoch == 0:
+    #if 1:
         j = int(i/ iter_per_epoch)
         train_acc = network.accuracy(x_train, t_train)
         test_acc = network.accuracy(x_test, t_test)
         train_acc_list.append(train_acc)
         test_acc_list.append(test_acc)
         
-        train_err = network.error(x_train, t_train)
+        
+        train_err = network.error(x_batch, t_batch)
         test_err = network.error(x_test, t_test)
         train_acc_list.append(train_acc)
         test_acc_list.append(test_acc)
-        #train_err_list[j] = train_error
-        #test_err_list[j] = test_error
-        print(train_err)
+        
+        train_y = network.y(x_batch)
+        train_y_list.append(train_y) 
+        
+        #print("train_y :" + str(train_y))
+        #print("train_t: " + str(t_batch))
+        #print((train_y-t_batch)/t_batch)                        # 正しい誤差の配列が表示される
+        #print("err: " + str(np.mean(train_y-t_batch)/t_batch))  # 正しい誤差の平均が表示されない
+        
+        print("i=" + str(i) + ": " + str(train_err))
+        #print(train_err)                                        # 正しい誤差の平均が表示される
         
