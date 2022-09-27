@@ -9,6 +9,9 @@ import matplotlib.pyplot as plt
 from common.layers import *
 from dataset.mnist import load_mnist
 from main.two_layer_net import TwoLayerNet
+"""
+研究室動作確認
+"""
 
 """
 # データの読み込み
