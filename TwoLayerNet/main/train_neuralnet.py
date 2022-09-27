@@ -10,7 +10,7 @@ from common.layers import *
 from dataset.mnist import load_mnist
 from main.two_layer_net import TwoLayerNet
 """
-研究室動作確認
+研究室動作確認　from研究室PC
 """
 
 """
