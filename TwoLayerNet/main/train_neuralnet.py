@@ -102,10 +102,10 @@ plt.show()
 """
 network = TwoLayerNet(input_size=N, hidden_size=5, output_size=1)
 
-iters_num = 1000
+iters_num = 10000
 train_size = x_train.shape[0]
 batch_size = 5
-learning_rate = 0.001
+learning_rate = 0.0001
 #print(train_size)
 
 
@@ -116,22 +116,38 @@ test_acc_list = []
 train_err_list =[]
 train_err_list = []
 train_y_list = []
-#train_err_list = np.zeros(iters_num)
-#test_err_list = np.zeros(iters_num)
+train_err_list = []
+test_err_list = []
 
 iter_per_epoch = max(train_size / batch_size, 1)
-
+"""
 #条件を表示
 print("input_size(入力層ユニット数) = N(粒子数): " + str(N) + "(個)")
-print("hidden_size(隠れ層ユニット数): " + str(network.hidden_size) + str("個"))
-print("output_size(出力層ユニット数): " + str(network.output_size) + str("個"))
+print("hidden_size(隠れ層ユニット数): " + str(network.hidden_size) + "個")
+print("output_size(出力層ユニット数): " + str(network.output_size) + "個")
 print("train_size(全サンプル数): " + str(train_size) + "個")
 print("batch_size(バッチサイズ): " + str(batch_size) + "個")
 print("iter_per_epoch(1エポックの更新回数): " + str(iter_per_epoch) + "回")
+print("iters_num(全更新回数): " + str(iters_num) + "回")
 print("learning_rate(学習率): " + str(learning_rate))
 print("\n")
 print("train_err(誤差)")
+"""
 
+#条件を表示
+condition = \
+"input_size(入力層ユニット数) = N(粒子数): " + str(N) + "(個)\n\
+hidden_size(隠れ層ユニット数): " + str(network.hidden_size) + "個\n\
+output_size(出力層ユニット数): " + str(network.output_size) + "個\n\
+train_size(全サンプル数): " + str(train_size) + "個\n\
+batch_size(バッチサイズ): " + str(batch_size) + "個\n\
+iter_per_epoch(1エポックの更新回数): " + str(iter_per_epoch) + "回\n\
+iters_num(全更新回数): " + str(iters_num) + "回\n\
+learning_rate(学習率): " + str(learning_rate)
+
+print(condition)
+print("train_err(誤差)")      
+            
 for i in range(iters_num):
     batch_mask = np.random.choice(train_size, batch_size)   # 0からtrain_sizeまでの整数をランダムにbatch_size個抽出して1次元配列にする
     #print(batch_mask)
@@ -162,8 +178,8 @@ for i in range(iters_num):
         
         train_err = network.error(x_batch, t_batch)
         test_err = network.error(x_test, t_test)
-        train_acc_list.append(train_acc)
-        test_acc_list.append(test_acc)
+        train_err_list.append(train_err)
+        test_err_list.append(test_err)
         
         train_y = network.y(x_batch)
         train_y_list.append(train_y) 
@@ -175,4 +191,16 @@ for i in range(iters_num):
         
         print("i=" + str(i) + ": " + str(train_err))
         #print(train_err)                                        # 正しい誤差の平均が表示される
+
+x_array = np.arange(0, iters_num, iter_per_epoch)
         
+plt.title("error (y-t)/t", fontname="MS Gothic")
+plt.plot(x_array,train_err_list,color=(0.0,0.0,0.7))
+#plt.hist(x_train[:, 0], bins=100, density=True, color=(1.0,0,0.0))
+plt.xlabel('iter_index i')
+plt.ylabel('error (y-t)/t')
+plt.text(4, 3, condition, fontname="MS Gothic")
+plt.legend()
+#plt.ylim(-0.5, 2)
+plt.grid(True)
+plt.show()

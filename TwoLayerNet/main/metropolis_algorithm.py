@@ -13,11 +13,12 @@ import random
 import math
 import matplotlib.pyplot as plt
 
-def p(x):
-    return np.power(2/np.pi, 1/4) * wave_func(x)
-
 N = 2
-i = 100000
+def p(x, N):
+    return ( wave_func(x, N) )**2
+
+
+i = 1000
 M = int(i/10)
 x = np.zeros(N)
 #sdata= np.empty((int(i/10)+1, N))
@@ -25,7 +26,7 @@ sdata= np.ones((M, N))
 cnt=0
 for _ in range(i):
     y = x + np.random.uniform(-1,1,N)
-    alpha = min(1, p(y)/p(x))
+    alpha = min(1, p(y, N)/p(x, N))
     r = np.random.uniform(0,1)
     if r > alpha:
         y = x
@@ -44,7 +45,7 @@ t = -5.0
 cnt = 0
 for cnt in range(split):
     xdata[cnt] = t
-    ydata[cnt] = p(np.array([t, t]))
+    ydata[cnt] = p(np.array([t, t]), N)
     t += 10/split
 #print(xdata.shape)
 #print(ydata.shape)
@@ -54,9 +55,26 @@ for cnt in range(split):
 plt.title("Metropolis sampling of Ψ(x_1)^2")
 plt.plot(xdata,ydata,color=(0.0,0.0,0.7))
 plt.hist(sdata[:, 0], bins=100, density=True, color=(1.0,0,0.0))
+plt.text(4, 0.5, "Hello")
 plt.xlabel('x_1')
 plt.ylabel('P(x_1)')
 plt.legend()
 #plt.ylim(-0.5, 2)
 plt.grid(True)
 plt.show()
+"""
+
+s = "Hello, world"
+
+x = 0.4
+y = 0.6
+s = "Hello, world"
+
+x = [0, 1, 2, 3, 4, 5]
+y = [0, 1, 2, 3, 4, 5]
+plt.figure(figsize=(8, 4))
+plt.plot(x, y)
+plt.grid()
+plt.text(4, 3, "y=x")
+plt.show()
+"""
