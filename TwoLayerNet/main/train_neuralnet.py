@@ -34,7 +34,7 @@ def p(x, N):
     return ( wave_func(x, N) )**2
 
 
-i = 100000
+i = 10000
 M = int(i/10)
 sdata= np.empty((M+1, N))
 
@@ -78,6 +78,7 @@ print(t_train.shape)        # (M, 1)
 print(x_test.shape)         # (M, N)
 print(t_test.shape)         # (M, 1)
 """
+"""
 split = 100
 xdata= np.empty(split)
 ydata= np.empty(split)
@@ -101,9 +102,9 @@ plt.show()
 """
 network = TwoLayerNet(input_size=N, hidden_size=5, output_size=1)
 
-iters_num = 1
+iters_num = 10000
 train_size = x_train.shape[0]
-batch_size = 3
+batch_size = 5
 learning_rate = 0.1
 #print(train_size)
 
@@ -151,6 +152,5 @@ for i in range(iters_num):
         test_acc_list.append(test_acc)
         #train_err_list[j] = train_error
         #test_err_list[j] = test_error
-        #print(train_err)
+        print(train_err)
         
-"""
