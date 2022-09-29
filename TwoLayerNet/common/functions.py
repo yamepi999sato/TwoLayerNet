@@ -67,7 +67,7 @@ def Overlap(y, t):                          # 確認済み
     #print("y: " + str(y.shape))
     #print("t: " + str(t.shape))
     N_sample = y.shape[0]                   # xの行の数(=M)
-    t_per_y = np.sum(t/y)
+    t_per_y = np.sum(t/y)                   # yが0だと上手く動作しない
     t2_per_y2 = np.sum(t**2/y**2)
     K = 1/N_sample * t_per_y **2 / t2_per_y2
     return K
@@ -81,6 +81,6 @@ def diff_Overlap(y, t):                     # 確認済み
 
 x = np.array([[1],[1]])
 t = np.array([[2],[3]])
-#print(Overlap(x, t))
+print(Overlap(x, t))
 #print(diff_Overlap(x, t))
 

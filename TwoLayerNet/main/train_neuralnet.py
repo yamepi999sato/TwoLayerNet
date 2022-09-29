@@ -29,7 +29,7 @@ t_test = np.random.rand(60000, 1)
 
 # データの読み込み
 # メトロポリス法
-N = 3
+N = 3                                               # 
 def p(x, N):
     return ( wave_func(x, N) )**2
 
@@ -45,7 +45,7 @@ x = np.empty(N)
 cnt=0
 
 for _ in range(i):
-    y = x + np.random.uniform(-0.1,0.1,N)
+    y = x + np.random.uniform(-0.1,0.1,N)           # ランダム関数
     alpha = min(1, p(y, N)/p(x, N))
     r = np.random.uniform(0,1)
     if r > alpha:
@@ -58,7 +58,7 @@ for _ in range(i):
 cnt = 0
 x = np.zeros(N)
 for _ in range(i):
-    y = x + np.random.uniform(-1,1,N)
+    y = x + np.random.uniform(-1,1,N)               # ランダム関数
     alpha = min(1, p(y, N)/p(x, N))
     r = np.random.uniform(0,1)
     if r > alpha:
@@ -102,9 +102,9 @@ plt.show()
 """
 network = TwoLayerNet(input_size=N, hidden_size=5, output_size=1)
 
-iters_num = 100000
+iters_num = 10000
 train_size = x_train.shape[0]
-batch_size = 5
+batch_size = 1000
 learning_rate = 0.0001
 #print(train_size)
 
