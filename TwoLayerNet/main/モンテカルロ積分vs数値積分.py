@@ -18,23 +18,26 @@ from sympy.plotting import plot
 sym.init_printing(use_unicode=True)
 from sympy import sin, cos, tan, log, exp
 
-
+"""
 #　数値積分
-# 確認済み
+# 波動関数 N=1,2 で ∫ψ^2=1 になることを確認済み
 
 x, y = sym.symbols("x y")                   # 変数,定数を定義
-fxy  = exp(-x**2/2)                                # 被積分関数を定義
+Pxy  = np.power(np.pi, -1) * exp(-(x**2+y**2))                                # 被積分関数を定義
 
-Fx = sym.integrate(fxy, x)                   # 不定積分
+Fx = sym.integrate(Pxy, x, y)                   # 不定積分
 print(Fx)
 
-I = sym.integrate(fxy, (x, -np.inf, np.inf))        # 定積分 
+I = sym.integrate(Pxy, (x, -np.inf, np.inf), (y, -np.inf, np.inf))        # 定積分 
 print(I)
+"""
 
-
-
-
-
+x = sym.symbols("x")
+psi_exact = np.power(np.pi, -1/4) * exp(-(x**2)/2)
+psi_train = np.power(np.pi, -1/4) * exp(-(x**2)/3)
+# 数値積分での(正しい)オーバーラップ積分 N=1, psi_train=p.power(np.pi, -1/4) * exp(-(x**2)/3) で K=0.4*sqrt(6) を確認済み
+K = sym.integrate(psi_train * psi_exact, (x, -np.inf, np.inf))**2 / ( sym.integrate(psi_train**2, (x, -np.inf, np.inf)) * sym.integrate(psi_exact**2, (x, -np.inf, np.inf)) )    
+print(K)
 
 
 # モンテカルロ積分
@@ -46,4 +49,5 @@ def Overlap(y, t):                          # 確認済み
     t2_per_y2 = np.sum(t**2/y**2)
     K = 1/N_sample * t_per_y **2 / t2_per_y2
     return K
+
 

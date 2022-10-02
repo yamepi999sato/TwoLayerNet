@@ -58,9 +58,9 @@ def softmax_loss(X, t):
 
 def wave_func(x, N):                           # 確認済み
     if x.ndim == 2:
-        out = np.power(2/np.pi, N/4) * np.exp(- np.sum((x**2)/2, axis=1))
+        out = np.power(np.pi, -N/4) * np.exp(- np.sum((x**2)/2, axis=1))
     elif x.ndim == 1:
-        out = np.power(2/np.pi, N/4) * np.exp(- np.sum((x**2)/2, axis=0))
+        out = np.power(np.pi, -N/4) * np.exp(- np.sum((x**2)/2, axis=0))
     return out
 
 def Overlap(y, t):                          # 確認済み

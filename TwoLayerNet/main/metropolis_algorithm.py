@@ -13,12 +13,12 @@ import random
 import math
 import matplotlib.pyplot as plt
 
-N = 2
+N = 1
 def p(x, N):
     return ( wave_func(x, N) )**2
 
 
-i = 1000
+i = 1000000
 M = int(i/10)
 x = np.zeros(N)
 #sdata= np.empty((int(i/10)+1, N))
