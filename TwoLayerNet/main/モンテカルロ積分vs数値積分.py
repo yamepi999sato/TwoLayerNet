@@ -37,7 +37,39 @@ psi_exact = np.power(np.pi, -1/4) * exp(-(x**2)/2)
 psi_train = np.power(np.pi, -1/4) * exp(-(x**2)/3)
 # 数値積分での(正しい)オーバーラップ積分 N=1, psi_train=p.power(np.pi, -1/4) * exp(-(x**2)/3) で K=0.4*sqrt(6) を確認済み
 K = sym.integrate(psi_train * psi_exact, (x, -np.inf, np.inf))**2 / ( sym.integrate(psi_train**2, (x, -np.inf, np.inf)) * sym.integrate(psi_exact**2, (x, -np.inf, np.inf)) )    
-print(K)
+#print(K)
+
+N = 1
+# メトロポリス法
+i = 100000
+M = int(i/10)
+x = np.zeros(N)
+def p(x, N):
+    return ( wave_func(x, N) )**2
+#sdata= np.empty((int(i/10)+1, N))
+sdata= np.ones((M, N))
+cnt=0
+for _ in range(i):
+    y = x + np.random.uniform(-1,1,N)
+    alpha = min(1, p(y, N)/p(x, N))
+    r = np.random.uniform(0,1)
+    if r > alpha:
+        y = x
+    x = y
+    #print(x)
+    cnt += 1
+    if cnt%10==0:
+        sdata[int(cnt/10)-1]= x
+
+#print(sdata.shape)
+psi_metro_train = np.array(np.power(np.pi, -1/4) * np.exp(-(sdata**2)/3))
+psi_metro_exact = np.array(np.power(np.pi, -1/4) * np.exp(-(sdata**2)/2))
+#print(psi_metro_train.shape)
+#print(psi_metro_train)
+#print(psi_metro_exact.shape)
+
+
+
 
 
 # モンテカルロ積分
@@ -50,4 +82,11 @@ def Overlap(y, t):                          # 確認済み
     K = 1/N_sample * t_per_y **2 / t2_per_y2
     return K
 
+
+K_metro = Overlap(psi_metro_train, psi_metro_exact)
+print(K_metro)
+
+error = K_metro - 0.4*np.sqrt(6)
+print("サンプル数" + str(M))
+print("誤差: " + str(error))
 
