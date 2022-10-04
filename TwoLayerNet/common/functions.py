@@ -81,6 +81,9 @@ def diff_Overlap(y, t):                     # 確認済み
 
 x = np.array([[1],[1]])
 t = np.array([[2],[3]])
-print(Overlap(x, t))
+#print(Overlap(x, t))
 #print(diff_Overlap(x, t))
+day = 0.9898525065970256
+error = (day - 0.4*np.sqrt(6) )/(0.4*np.sqrt(6))
+print(error)
 
