@@ -42,6 +42,7 @@ K = sym.integrate(psi_train * psi_exact, (x, -np.inf, np.inf))**2 / ( sym.integr
 N = 1
 # メトロポリス法
 i = 100000
+
 M = int(i/10)
 x = np.zeros(N)
 def p(x, N):
@@ -49,13 +50,16 @@ def p(x, N):
 #sdata= np.empty((int(i/10)+1, N))
 sdata= np.ones((M, N))
 cnt=0
+naccept = 0
 for _ in range(i):
     y = x + np.random.uniform(-1,1,N)
     alpha = min(1, p(y, N)/p(x, N))
     r = np.random.uniform(0,1)
-    if r > alpha:
+    if r > alpha:                   # 棄却
         y = x
-    x = y
+    else:                           # 受理
+        naccept += 1
+        x = y
     #print(x)
     cnt += 1
     if cnt%10==0:
@@ -67,8 +71,22 @@ psi_metro_exact = np.array(np.power(np.pi, -1/4) * np.exp(-(sdata**2)/2))
 #print(psi_metro_train.shape)
 #print(psi_metro_train)
 #print(psi_metro_exact.shape)
+#print("提案受理回数: " + str(naccept))
+#print("提案受理率: " + str(naccept/i *100) + "%")
 
+x_array = np.arange(0, M, 1)
 
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+
+fig.subplots_adjust(right=0.5)
+ax.set_title("error (y-t)/t", fontname="MS Gothic")             # タイトル
+ax.set_xlabel('iter_index i')                                   # x軸ラベル  
+ax.set_ylabel('error (y-t)/t')                                  # y軸ラベル
+#ax.text(1.1, 0.5, condition, ha='left', va='center', transform=ax.transAxes, fontname="MS Gothic")   #表示するテキスト
+
+ax.plot(x_array, sdata)                                # x軸,y軸に入れるリスト
+plt.show()
 
 
 
@@ -84,9 +102,11 @@ def Overlap(y, t):                          # 確認済み
 
 
 K_metro = Overlap(psi_metro_train, psi_metro_exact)
-print(K_metro)
+#print(K_metro)
 
 error = K_metro - 0.4*np.sqrt(6)
-print("サンプル数" + str(M))
-print("誤差: " + str(error))
+#print("サンプル数" + str(M))
+#print("誤差: " + str(error))
+
+
 
