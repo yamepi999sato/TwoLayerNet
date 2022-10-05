@@ -17,7 +17,10 @@ import sympy as sym
 from sympy.plotting import plot
 sym.init_printing(use_unicode=True)
 from sympy import sin, cos, tan, log, exp
+import time
 
+
+time_sta = time.perf_counter()
 """
 #　数値積分
 # 波動関数 N=1,2 で ∫ψ^2=1 になることを確認済み
@@ -31,13 +34,23 @@ print(Fx)
 I = sym.integrate(Pxy, (x, -np.inf, np.inf), (y, -np.inf, np.inf))        # 定積分 
 print(I)
 """
-N = 1
+N = 2
+"""
+# N=1
 x = sym.symbols("x")
 psi_exact = np.power(np.pi, -N/4) * exp(-(x**2)/2)
 psi_train = np.power(np.pi, -N/4) * exp(-(x**2)/3)
 # 数値積分での(正しい)オーバーラップ積分 N=1, psi_train=p.power(np.pi, -1/4) * exp(-(x**2)/3) で K=0.4*sqrt(6) を確認済み
 K = sym.integrate(psi_train * psi_exact, (x, -np.inf, np.inf))**2 / ( sym.integrate(psi_train**2, (x, -np.inf, np.inf)) * sym.integrate(psi_exact**2, (x, -np.inf, np.inf)) )    
-#print(K)
+print("K=" + str(K))
+"""
+
+# N=2
+x_1, x_2 = sym.symbols("x_1, x_2")
+psi_exact = np.power(np.pi, -N/4) * exp(-(x_1**2)/2) * exp(-(x_2**2)/2)
+psi_train = np.power(np.pi, -N/4) * exp(-(x_1**2)/3) * exp(-(x_2**2)/3)
+K = sym.integrate(psi_train * psi_exact, (x_1, -np.inf, np.inf), (x_2, -np.inf, np.inf))**2 / ( sym.integrate(psi_train**2, (x_1, -np.inf, np.inf), (x_2, -np.inf, np.inf)) * sym.integrate(psi_exact**2, (x_1, -np.inf, np.inf), (x_2, -np.inf, np.inf)) )    
+print("K=" + str(K))
 
 
 # メトロポリス法
@@ -136,7 +149,11 @@ print("試行回数: " + str(i))
 print("サンプル数: " + str(M))
 print("K_metro=" + str(K_metro))
 print("誤差: " + str(abs_error))
-print("相対誤差: " + str(abs_error))
+print("相対誤差: " + str(rel_error))
+
+time_end = time.perf_counter()
+tim = time_end- time_sta
+print("実行時間: " + str(tim) + " sec")
 
 
 
