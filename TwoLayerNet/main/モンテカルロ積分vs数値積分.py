@@ -34,7 +34,7 @@ print(Fx)
 I = sym.integrate(Pxy, (x, -np.inf, np.inf), (y, -np.inf, np.inf))        # 定積分 
 print(I)
 """
-N = 2
+N = 1
 """
 # N=1
 x = sym.symbols("x")
@@ -50,11 +50,19 @@ x_1, x_2 = sym.symbols("x_1, x_2")
 psi_exact = np.power(np.pi, -N/4) * exp(-(x_1**2)/2) * exp(-(x_2**2)/2)
 psi_train = np.power(np.pi, -N/4) * exp(-(x_1**2)/3) * exp(-(x_2**2)/3)
 K = sym.integrate(psi_train * psi_exact, (x_1, -np.inf, np.inf), (x_2, -np.inf, np.inf))**2 / ( sym.integrate(psi_train**2, (x_1, -np.inf, np.inf), (x_2, -np.inf, np.inf)) * sym.integrate(psi_exact**2, (x_1, -np.inf, np.inf), (x_2, -np.inf, np.inf)) )    
-print("K=" + str(K))
+#print("K=" + str(K))
 
+"""
+# N=3
+x_1, x_2, x_3 = sym.symbols("x_1, x_2, x_3")
+psi_exact = np.power(np.pi, -N/4) * exp(-(x_1**2)/2) * exp(-(x_2**2)/2)
+psi_train = np.power(np.pi, -N/4) * exp(-(x_1**2)/3) * exp(-(x_2**2)/3)
+K = sym.integrate(psi_train * psi_exact, (x_1, -np.inf, np.inf), (x_2, -np.inf, np.inf))**2 / ( sym.integrate(psi_train**2, (x_1, -np.inf, np.inf), (x_2, -np.inf, np.inf)) * sym.integrate(psi_exact**2, (x_1, -np.inf, np.inf), (x_2, -np.inf, np.inf)) )    
+print("K=" + str(K))
+"""
 
 # メトロポリス法
-i = 100
+i = 1000000
 
 auto_l = 30
 M = int(i/auto_l)
@@ -104,7 +112,7 @@ ax.plot(x_array, sdata)                                # x軸,y軸に入れる�
 plt.show()
 """
 
-"""
+
 # 確率密度関数の再現グラフ
 split = 100
 xdata= np.zeros(split)
@@ -126,9 +134,9 @@ plt.legend()
 #plt.ylim(-0.5, 2)
 plt.grid(True)
 plt.show()
+
+
 """
-
-
 # モンテカルロ積分
 def Overlap(y, t):                          # 確認済み
     #print("y: " + str(y.shape))
@@ -156,5 +164,5 @@ tim = time_end- time_sta
 print("実行時間: " + str(tim) + " sec")
 
 
-
+"""
 
