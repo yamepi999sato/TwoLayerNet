@@ -67,6 +67,14 @@ i = 1000000
 auto_l = 30
 M = int(i/auto_l)
 x = np.zeros(N)
+
+sum_x = 0
+expect_x = 0
+expect_x_array = np.empty(0)
+sum_x2 = 0
+expect_x2 = 0
+expect_x2_array = np.empty(0)
+
 def p(x, N):
     return ( wave_func(x, N) )**2
 #sdata= np.empty((int(i/10)+1, N))
@@ -86,6 +94,13 @@ for _ in range(i):
     cnt += 1
     if cnt% auto_l ==0:
         sdata[int(cnt/auto_l)-1]= x
+        
+    sum_x += y
+    expect_x = sum_x / (iter + 1)
+    expect_x_array = np.append(expect_x_array, expect_x)
+    sum_x2 += y**2
+    expect_x2 = sum_x2 / (iter + 1)
+    expect_x2_array = np.append(expect_x2_array, expect_x2)
 
 #print(sdata.shape)
 psi_metro_train = np.array(np.power(np.pi, -1/4) * np.exp(-(sdata**2)/3))
@@ -125,8 +140,10 @@ for cnt in range(split):
     t += 10/split
 
 plt.title("Metropolis sampling of Ψ(x_1)^2")
-plt.plot(xdata,ydata,color=(0.0,0.0,0.7))
-plt.hist(sdata[:, 0], bins=100, density=True, color=(1.0,0,0.0))
+#plt.plot(xdata,ydata,color=(0.0,0.0,0.7))
+plt.plot(np.arange(0, i), expect_x_array, label='<x>')
+plt.plot(np.arange(0, i), expect_x2_array, label='<x^2>')
+#plt.hist(sdata[:, 0], bins=100, density=True, color=(1.0,0,0.0))
 #plt.text(4, 0.5, "Hello")
 plt.xlabel('x_1')
 plt.ylabel('P(x_1)')
@@ -158,11 +175,10 @@ print("サンプル数: " + str(M))
 print("K_metro=" + str(K_metro))
 print("誤差: " + str(abs_error))
 print("相対誤差: " + str(rel_error))
-
+"""
 time_end = time.perf_counter()
 tim = time_end- time_sta
 print("実行時間: " + str(tim) + " sec")
 
 
-"""
 
