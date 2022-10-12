@@ -148,7 +148,7 @@ class Minus_Overlap():
         out = - Overlap(self.y, self.t)
         self.out = out
         return self.out
-        #print("Minus_Overlap forward out: " + str(out) + "\n")
+        print("Minus_Overlap forward out: " + str(out) + "\n")
 
     def backward(self, dout=1):
         dx = - diff_Overlap(self.y, self.t)

@@ -63,6 +63,9 @@ class TwoLayerNet:
         y = self.predict(x)
         return y
     
+    def overlap(self, y, t):
+        K = Overlap(y, t)
+        return K
         
     # x:入力データ, t:教師データ
     def numerical_gradient(self, x, t):

@@ -102,7 +102,7 @@ plt.show()
 """
 network = TwoLayerNet(input_size=N, hidden_size=5, output_size=1)
 
-iters_num = 10000
+iters_num = 1
 train_size = x_train.shape[0]
 batch_size = 1000
 learning_rate = 0.0001
@@ -117,6 +117,8 @@ train_err_list = []
 train_y_list = []
 train_err_list = []
 test_err_list = []
+train_overlap_list = []
+test_overlap_list = []
 
 iter_per_epoch = max(train_size / batch_size, 1)
 
@@ -160,8 +162,13 @@ for i in range(iters_num):
         
         train_err = network.error(x_batch, t_batch)
         test_err = network.error(x_test, t_test)
+        train_overlap = network.overlap(x_batch, t_batch)
+        test_overlap = network.overlap(x_test, t_test)
+        
         train_err_list.append(train_err)
         test_err_list.append(test_err)
+        train_overlap_list.append(train_overlap)
+        test_overlap_list.append(test_overlap)
         
         train_y = network.y(x_batch)
         train_y_list.append(train_y) 
@@ -175,17 +182,22 @@ for i in range(iters_num):
         #print(train_err)                                        # 正しい誤差の平均が表示される
 
 x_array = np.arange(0, iters_num, iter_per_epoch)
+print(len(train_overlap_list))
+print(train_overlap_list[0])                                     # nanになってる
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)
 
 fig.subplots_adjust(right=0.5)
-ax.set_title("error (y-t)/t", fontname="MS Gothic")             # タイトル
+#ax.set_title("error (y-t)/t", fontname="MS Gothic") 
+ax.set_title("overlap K")            # タイトル
 ax.set_xlabel('iter_index i')                                   # x軸ラベル  
-ax.set_ylabel('error (y-t)/t')                                  # y軸ラベル
+#ax.set_ylabel('error (y-t)/t')                                  # y軸ラベル
+ax.set_ylabel('overlap K')
 ax.text(1.1, 0.5, condition, ha='left', va='center', transform=ax.transAxes, fontname="MS Gothic")   #表示するテキスト
 
-ax.plot(x_array, train_err_list)                                # x軸,y軸に入れるリスト
+#ax.plot(x_array, train_err_list)
+ax.plot(x_array, train_overlap_list)                                # x軸,y軸に入れるリスト
 plt.show()
 
 """
