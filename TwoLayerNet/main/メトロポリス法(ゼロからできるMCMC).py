@@ -22,7 +22,8 @@ import time
 
 
 time_sta = time.perf_counter()
-niter = 100000
+niter = 1000000
+
 step_size = 0.5
 x = 0
 naccept = 0
