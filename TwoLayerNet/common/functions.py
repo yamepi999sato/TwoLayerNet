@@ -4,7 +4,9 @@ import numpy as np
  
 
 def wave_func(x, N):                           # 確認済み
-    if x.ndim == 2:
+    if type(x) == int or type(x) == float:
+        out = np.power(np.pi, -N/4) * np.exp(-(x**2)/2)
+    elif x.ndim == 2:
         out = np.power(np.pi, -N/4) * np.exp(- np.sum((x**2)/2, axis=1))
     elif x.ndim == 1:
         out = np.power(np.pi, -N/4) * np.exp(- np.sum((x**2)/2, axis=0))
