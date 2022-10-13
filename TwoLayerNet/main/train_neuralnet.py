@@ -107,7 +107,7 @@ plt.show()
 """
 network = TwoLayerNet(input_size=N, hidden_size=5, output_size=1)
 
-iters_num = 100000
+iters_num = 100
 train_size = x_train.shape[0]
 batch_size = 100
 learning_rate = 0.0001
@@ -189,7 +189,7 @@ for i in range(iters_num):
 
 x_array = np.arange(0, iters_num, iter_per_epoch)
 print(len(train_overlap_list))
-print(train_overlap_list[0])                                     # nanになってる
+print(train_overlap_list)                                     # nanになってる
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)

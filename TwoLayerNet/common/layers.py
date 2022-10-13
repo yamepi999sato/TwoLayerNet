@@ -183,7 +183,7 @@ class Tanh:
         
     
     def backward(self, dout):
-        dx = dout * (1- self.x **2)
+        dx = (1- dout **2)
         #print("Tanh backward out: " + str(dx) + "\n")
         return dx
         
