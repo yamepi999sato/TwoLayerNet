@@ -17,18 +17,16 @@ from dataset.mnist import load_mnist
 from main.two_layer_net import TwoLayerNet
 import time
 
-x = np.log(5)
-tanh = Tanh()
-y = tanh.forward(x)
+x = np.log(np.e)
+exp = Exp()
+y = exp.forward(x)
 print(x)
 print(y)
 
 dout = y
-dx = tanh.backward(dout)
-print(x)
-print(y)
+dx = exp.backward(dout)
 
-print( (1 - dout**2))
+
 print(dx)
 
 

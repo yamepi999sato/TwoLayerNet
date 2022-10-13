@@ -107,7 +107,7 @@ plt.show()
 """
 network = TwoLayerNet(input_size=N, hidden_size=5, output_size=1)
 
-iters_num = 100
+iters_num = 10000
 train_size = x_train.shape[0]
 batch_size = 100
 learning_rate = 0.0001
