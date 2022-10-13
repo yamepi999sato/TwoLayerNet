@@ -4,6 +4,7 @@ from common.functions import *
 from common.util import im2col, col2im
 
 
+
 class Affine:
     def __init__(self, W, b):
         self.W =W
@@ -56,8 +57,9 @@ class Minus_Overlap():
         self.t = t
         out = - Overlap(self.y, self.t)
         self.out = out
+        #print("Minus_Overlap forward out: " + str(out) + "\n")
         return self.out
-        print("Minus_Overlap forward out: " + str(out) + "\n")
+        
 
     def backward(self, dout=1):
         dx = - diff_Overlap(self.y, self.t)
@@ -176,11 +178,15 @@ class Tanh:
     def forward(self, x):
         self.x = x
         self.out = np.tanh(x)
+        #print("Tanh forward out: " + str(self.out) + "\n")
         return self.out
+        
     
     def backward(self, dout):
         dx = dout * (1- self.x **2)
+        #print("Tanh backward out: " + str(dx) + "\n")
         return dx
+        
 
 class Exp:
     def __init__(self):
@@ -192,8 +198,9 @@ class Exp:
         out = np.exp(x)
         self.out = out
         #print("exp_out: " + str(self.out.shape))
+        #print("Exp forward out: " + str(self.out) + "\n")
         return self.out
-        #print("Exp forward out: " + str(out) + "\n")
+        
     
     def backward(self, dout):
         dx = dout

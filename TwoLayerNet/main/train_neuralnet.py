@@ -9,6 +9,10 @@ import matplotlib.pyplot as plt
 from common.layers import *
 from dataset.mnist import load_mnist
 from main.two_layer_net import TwoLayerNet
+import time
+
+time_sta = time.perf_counter()
+
 """
 研究室動作確認　from研究室PC
 """
@@ -44,8 +48,9 @@ x_test = np.empty((M, N))
 x = np.empty(N)
 cnt=0
 
-for _ in range(i):
-    y = x + np.random.uniform(-0.1,0.1,N)           # ランダム関数
+for cnt in range(i):
+    #print("x=" + str(x))
+    y = x + np.random.uniform(-1,1,N)           # ランダム関数
     alpha = min(1, p(y, N)/p(x, N))
     r = np.random.uniform(0,1)
     if r > alpha:
@@ -53,11 +58,11 @@ for _ in range(i):
     x = y
     cnt += 1
     if cnt%10==0:
-        x_train[M-1] = x
+        x_train[int(cnt/10 -1)] = x
 
 cnt = 0
 x = np.zeros(N)
-for _ in range(i):
+for cnt in range(i):
     y = x + np.random.uniform(-1,1,N)               # ランダム関数
     alpha = min(1, p(y, N)/p(x, N))
     r = np.random.uniform(0,1)
@@ -66,11 +71,11 @@ for _ in range(i):
     x = y
     cnt += 1
     if cnt%10==0:
-        x_test[M-1]= x
+        x_test[int(cnt/10 -1)]= x
 
 t_train = wave_func(x_train, N).reshape(-1, 1)
 t_test = wave_func(x_test, N).reshape(-1, 1)
-#print(x_train)
+#print("x_train=" + str(x_train))
 #print(t_train)
 """
 print(x_train.shape)        # (M, N)
@@ -102,9 +107,9 @@ plt.show()
 """
 network = TwoLayerNet(input_size=N, hidden_size=5, output_size=1)
 
-iters_num = 1
+iters_num = 100000
 train_size = x_train.shape[0]
-batch_size = 1
+batch_size = 100
 learning_rate = 0.0001
 #print(train_size)
 
@@ -134,14 +139,15 @@ iter_per_epoch(1エポックの更新回数): " + str(iter_per_epoch) + "回\n\
 iters_num(全更新回数): " + str(iters_num) + "回\n\
 learning_rate(学習率): " + str(learning_rate)
 
-print(condition)
-print("train_err(誤差)")      
+print(str(condition) + "\n")
+#print("train_err(誤差)")      
             
 for i in range(iters_num):
     batch_mask = np.random.choice(train_size, batch_size)   # 0からtrain_sizeまでの整数をランダムにbatch_size個抽出して1次元配列にする
-    #print(batch_mask)
+    #print("batch_mask=" + str(batch_mask))
     x_batch = x_train[batch_mask]
     #print(x_batch.shape)                                    # (batch_size, N)
+    #print("x_bathch " + str(x_batch))
     t_batch = t_train[batch_mask]
     #print(t_batch.shape)                                    # (batch_size, 1)
     
@@ -212,3 +218,7 @@ plt.legend()
 plt.grid(True)
 plt.show()
 """
+
+time_end = time.perf_counter()
+tim = time_end- time_sta
+print("実行時間: " + str(tim) + " sec")
