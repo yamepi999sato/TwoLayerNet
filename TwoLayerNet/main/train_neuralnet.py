@@ -104,7 +104,7 @@ network = TwoLayerNet(input_size=N, hidden_size=5, output_size=1)
 
 iters_num = 1
 train_size = x_train.shape[0]
-batch_size = 1000
+batch_size = 1
 learning_rate = 0.0001
 #print(train_size)
 

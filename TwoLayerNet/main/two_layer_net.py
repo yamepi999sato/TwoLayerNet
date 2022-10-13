@@ -25,7 +25,8 @@ class TwoLayerNet:
         # レイヤの生成
         self.layers = OrderedDict()
         self.layers['Affine1'] = Affine(self.params['W1'], self.params['b1'])
-        self.layers['Relu1'] = Relu()
+        #self.layers['Relu1'] = Relu()
+        self.layers['Tanh'] = Tanh()
         self.layers['Affine2'] = Affine(self.params['W2'], self.params['b2'])
         self.layers['Exp2'] = Exp()
 
