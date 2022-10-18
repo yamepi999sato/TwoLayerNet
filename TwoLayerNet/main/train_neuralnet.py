@@ -189,7 +189,7 @@ for i in range(iters_num):
 
 x_array = np.arange(0, iters_num, iter_per_epoch)
 print(len(train_overlap_list))
-print(train_overlap_list)                                     # nanになってる
+#print(train_overlap_list)                                     # nanになってる
 
 fig = plt.figure()
 ax = fig.add_subplot(1, 1, 1)

@@ -28,6 +28,10 @@ def diff_Overlap(y, t):                     # 確認済み
     diff = 2/N_sample * (t_per_y * t**2/y**3 - t2_per_y2 * t/y**2)
     return diff
 
+def numerical_Overlap():
+    return 0
+
+
 
 x = np.array([[1],[1]])
 t = np.array([[2],[3]])
