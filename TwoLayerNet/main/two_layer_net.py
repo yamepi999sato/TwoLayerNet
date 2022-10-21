@@ -42,6 +42,7 @@ class TwoLayerNet:
     # x:入力データ, t:教師データ
     def loss(self, x, t):
         y = self.predict(x)
+        print("loss")
         return self.lastLayer.forward(y, t)
     
     def accuracy(self, x, t):
@@ -55,6 +56,7 @@ class TwoLayerNet:
     def error(self, x, t):
         y = self.predict(x)
         error = np.mean((y-t)/t)
+        print("error")
         return error
     
     def t(self, t):
@@ -98,4 +100,5 @@ class TwoLayerNet:
         grads['W1'], grads['b1'] = self.layers['Affine1'].dW, self.layers['Affine1'].db
         grads['W2'], grads['b2'] = self.layers['Affine2'].dW, self.layers['Affine2'].db
 
+        print("gradient")
         return grads

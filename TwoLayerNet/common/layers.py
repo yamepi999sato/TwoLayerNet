@@ -69,7 +69,7 @@ class Tanh:
     def forward(self, x):
         self.x = x
         self.out = np.tanh(x)
-        #print("Tanh forward out: " + str(self.out) + "\n")
+        print("Tanh forward out: " + str(self.out) + "\n")
         return self.out
         
     
