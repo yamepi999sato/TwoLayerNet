@@ -96,8 +96,8 @@ network = TwoLayerNet(input_size=N, hidden_size=3, output_size=1)
 train_size = x_train.shape[0]                           # 全サンプル数
 batch_size = 2                                       # バッチサイズ
 iter_per_epoch = max(train_size / batch_size, 1)        # 1エポックの更新回数
-iters_num = 3                                       # 全更新回数
-learning_rate = 0.0001                                  # 学習率
+iters_num = 2                                       # 全更新回数
+learning_rate = 0.01*0                                  # 学習率
 
 train_loss_list = []
 train_err_list =[]
@@ -151,6 +151,8 @@ for i in range(iters_num):
         test_err = network.error(x_test, t_test)
         train_overlap = network.overlap(x_batch, t_batch)   # オーバーラップ積分の値
         test_overlap = network.overlap(x_test, t_test)      # オーバーラップ積分の値
+        diff = network.diff(x_batch, t_batch)
+        print("y-t=" + str(diff))
         
         train_err_list.append(train_err)
         test_err_list.append(test_err)
@@ -163,7 +165,9 @@ for i in range(iters_num):
         
         #print("i=" + str(i) + ": " + str(train_err))
         #print(train_err)                                        # 正しい誤差の平均が表示される
-
+        
+        
+print(train_overlap_list)
 x_array = np.arange(0, iters_num, iter_per_epoch)
 #print(len(train_overlap_list))
 #print(train_overlap_list)                                     # nanになってる
@@ -177,11 +181,14 @@ ax.set_title("overlap K")            # タイトル
 ax.set_xlabel('iter_index i')                                   # x軸ラベル  
 #ax.set_ylabel('error (y-t)/t')                                  # y軸ラベル
 ax.set_ylabel('overlap K')
+#ax.set_xlim(0, iters_num)
+#ax.set_ylim(-10, 2)
 ax.text(1.1, 0.5, condition, ha='left', va='center', transform=ax.transAxes, fontname="MS Gothic")   #表示するテキスト
 
 #ax.plot(x_array, train_err_list)
 ax.plot(x_array, train_overlap_list)                                # x軸,y軸に入れるリスト
 plt.show()
+
 
 """
 plt.title("error (y-t)/t", fontname="MS Gothic")

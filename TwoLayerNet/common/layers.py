@@ -22,7 +22,7 @@ class Affine:
         self.x = x
 
         out = np.dot(self.x, self.W) + self.b
-        #print("Affine forward out: " + str(out) + "\n")
+        print("Affine forward out: " + str(out) + "\n")
 
         return out
 
@@ -32,7 +32,7 @@ class Affine:
         self.db = np.sum(dout, axis=0)
         
         dx = dx.reshape(*self.original_x_shape)  # 入力データの形状に戻す（テンソル対応）
-        #print("Affine backward out: " + str(dx) + "\n")
+        print("Affine backward out: " + str(dx) + "\n")
         return dx
 
 
@@ -47,13 +47,13 @@ class Minus_Overlap():
         self.t = t
         out = - Overlap(self.y, self.t)
         self.out = out
-        #print("Minus_Overlap forward out: " + str(out) + "\n")
+        print("Minus_Overlap forward out: " + str(out) + "\n")
         return self.out
         
 
     def backward(self, dout=1):
         dx = - diff_Overlap(self.y, self.t)
-        #print("Minus_Overlap backward out: " + str(dx) + "\n")
+        print("Minus_Overlap backward out: " + str(dx) + "\n")
         return dx
 
 """        
@@ -75,7 +75,7 @@ class Tanh:
     
     def backward(self, dout):
         dx = (1- dout **2)
-        #print("Tanh backward out: " + str(dx) + "\n")
+        print("Tanh backward out: " + str(dx) + "\n")
         return dx
         
 
@@ -89,13 +89,13 @@ class Exp:
         out = np.exp(x)
         self.out = out
         #print("exp_out: " + str(self.out.shape))
-        #print("Exp forward out: " + str(self.out) + "\n")
+        print("Exp forward out: " + str(self.out) + "\n")
         return self.out
         
     
     def backward(self, dout):
         dx = dout
-        #print("Exp backward out: " + str(dx) + "\n")
+        print("Exp backward out: " + str(dx) + "\n")
         return dx
 
 
