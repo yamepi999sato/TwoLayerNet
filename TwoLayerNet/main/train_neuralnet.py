@@ -96,7 +96,7 @@ network = TwoLayerNet(input_size=N, hidden_size=3, output_size=1)
 train_size = x_train.shape[0]                           # 全サンプル数
 batch_size = 2                                       # バッチサイズ
 iter_per_epoch = max(train_size / batch_size, 1)        # 1エポックの更新回数
-iters_num = 2                                       # 全更新回数
+iters_num = 20                                       # 全更新回数
 learning_rate = 0.01*0                                  # 学習率
 
 train_loss_list = []
@@ -159,7 +159,7 @@ for i in range(iters_num):
         train_overlap_list.append(train_overlap)            # リストに格納
         test_overlap_list.append(test_overlap)
         
-        train_y = network.y(x_batch)
+        train_y = network.predict(x_batch)
         train_y_list.append(train_y) 
         
         

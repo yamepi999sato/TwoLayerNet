@@ -35,57 +35,31 @@ class TwoLayerNet:
     def predict(self, x):
         for layer in self.layers.values():
             x = layer.forward(x)
-        
+            print(str(layer) + ".forward out:\n" + str(x) + "\n")
         return x
         
     # x:入力データ, t:教師データ
     def loss(self, x, t):
         y = self.predict(x)
-        print("loss")
+        print(str(self.lastLayer) + ".forward out:\n" + str(y) + "\n")
         return self.lastLayer.forward(y, t)
     
-    def accuracy(self, x, t):
-        y = self.predict(x)
-        y = np.argmax(y, axis=1)
-        if t.ndim != 1 : t = np.argmax(t, axis=1)
-        
-        accuracy = np.sum(y == t) / float(x.shape[0])
-        return accuracy
-    
-    def error(self, x, t):
+    def error(self, x, t):                              # 相対誤差 (y-t)/t
         y = self.predict(x)
         error = np.mean((y-t)/t)
         print("error")
         return error
     
-    def diff(self, x, t):
+    def diff(self, x, t):                               # 絶対誤差 y-t
         y = self.predict(x)
         diff = y - t
         return diff
-        
-    def t(self, t):
-        return t
-    
-    def y(self, x):
-        y = self.predict(x)
-        return y
     
     def overlap(self, y, t):
         K = Overlap(y, t)
         return K
         
-    # x:入力データ, t:教師データ
-    def numerical_gradient(self, x, t):
-        loss_W = lambda W: self.loss(x, t)
-        
-        grads = {}
-        grads['W1'] = numerical_gradient(loss_W, self.params['W1'])
-        grads['b1'] = numerical_gradient(loss_W, self.params['b1'])
-        grads['W2'] = numerical_gradient(loss_W, self.params['W2'])
-        grads['b2'] = numerical_gradient(loss_W, self.params['b2'])
-        
-        return grads
-        
+    # x:入力データ, t:教師データ        
     def gradient(self, x, t):
         # forward
         self.loss(x, t)
@@ -93,11 +67,13 @@ class TwoLayerNet:
         # backward
         dout = 1
         dout = self.lastLayer.backward(dout)
+        print(str(self.lastLayer) + ".backward out:\n" + str(dout) + "\n")
         
         layers = list(self.layers.values())
         layers.reverse()
         for layer in layers:
             dout = layer.backward(dout)
+            print(str(layer) + ".backward out:\n" + str(dout) + "\n")
 
         # 設定
         grads = {}
