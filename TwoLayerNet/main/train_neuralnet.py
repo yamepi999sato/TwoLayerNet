@@ -28,7 +28,7 @@ sdata= np.zeros((M+1, N))
 x_train = np.zeros((M, N))
 x_test = np.zeros((M, N))
 
-x = np.empty(N)
+x = np.zeros(N)
 cnt=0
 
 # 訓練用入力データx_trainの生成
