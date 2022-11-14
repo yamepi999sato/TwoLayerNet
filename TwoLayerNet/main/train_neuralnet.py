@@ -40,10 +40,10 @@ def p(x, N):
 
 M = 1000
 i = int(M*10)
-sdata= np.empty((M+1, N))
+sdata= np.zeros((M+1, N))
 
-x_train = np.empty((M, N))
-x_test = np.empty((M, N))
+x_train = np.zeros((M, N))
+x_test = np.zeros((M, N))
 
 x = np.empty(N)
 cnt=0
