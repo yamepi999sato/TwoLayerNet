@@ -42,6 +42,14 @@ class Minus_Overlap():
         dx = - diff_Overlap(self.y, self.t)
         return dx
 
+<<<<<<< HEAD
+=======
+
+"""        
+class numerical_minus_Overlap():
+    def __init__(self):
+"""        
+>>>>>>> 176dec0839d66f674b8ccefc546c873403b34492
     
 class Tanh:
     def __init__(self):

@@ -23,12 +23,12 @@ def p(x, N):
 
 M = 10                                          # 全サンプル数
 i = int(M*10)
-sdata= np.zeros((M+1, N))
+sdata= np.empty((M+1, N))
 
-x_train = np.zeros((M, N))
-x_test = np.zeros((M, N))
+x_train = np.empty((M, N))
+x_test = np.empty((M, N))
 
-x = np.zeros(N)
+x = np.empty(N)
 cnt=0
 
 # 訓練用入力データx_trainの生成
