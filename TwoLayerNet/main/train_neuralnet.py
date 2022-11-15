@@ -35,7 +35,7 @@ cnt=0
 
 # テスト用入力データx_testの生成
 cnt = 0
-x = np.empty(N)
+x = np.zeros(N)
 for cnt in range(i):
     y = x + np.random.uniform(-1,1,N)               # ランダム関数
     alpha = min(1, p(y, N)/p(x, N))

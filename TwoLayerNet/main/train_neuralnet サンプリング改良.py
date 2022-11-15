@@ -23,13 +23,12 @@ def p(x, N):
 
 M = 10                                          # 全サンプル数
 i = int(M*10)
-sdata= np.empty((M+1, N))
-"aiueo"
+sdata= np.zeros((M+1, N))
 
-x_train = np.empty((M, N))
-x_test = np.empty((M, N))
+x_train = np.zeros((M, N))
+x_test = np.zeros((M, N))
 
-x = np.empty(N)
+x = np.zeros(N)
 cnt=0
 
 # 訓練用入力データx_trainの生成
@@ -47,7 +46,7 @@ for cnt in range(i):
 
 # テスト用入力データx_testの生成
 cnt = 0
-x = np.empty(N)
+x = np.zeros(N)
 for cnt in range(i):
     y = x + np.random.uniform(-1,1,N)               # ランダム関数
     alpha = min(1, p(y, N)/p(x, N))
