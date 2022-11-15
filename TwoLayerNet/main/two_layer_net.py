@@ -35,13 +35,13 @@ class TwoLayerNet:
     def predict(self, x):
         for layer in self.layers.values():
             x = layer.forward(x)
-            print(str(layer) + ".forward out:\n" + str(x) + "\n")
+            #print(str(layer) + ".forward out:\n" + str(x) + "\n")
         return x
         
     # x:入力データ, t:教師データ
     def loss(self, x, t):
         y = self.predict(x)
-        print(str(self.lastLayer) + ".forward out:\n" + str(y) + "\n")
+        #print(str(self.lastLayer) + ".forward out:\n" + str(y) + "\n")
         return self.lastLayer.forward(y, t)
     
     def error(self, x, t):                              # 相対誤差 (y-t)/t
@@ -67,18 +67,17 @@ class TwoLayerNet:
         # backward
         dout = 1
         dout = self.lastLayer.backward(dout)
-        print(str(self.lastLayer) + ".backward out:\n" + str(dout) + "\n")
+        #print(str(self.lastLayer) + ".backward out:\n" + str(dout) + "\n")
         
         layers = list(self.layers.values())
         layers.reverse()
         for layer in layers:
             dout = layer.backward(dout)
-            print(str(layer) + ".backward out:\n" + str(dout) + "\n")
+            #print(str(layer) + ".backward out:\n" + str(dout) + "\n")
 
         # 設定
         grads = {}
         grads['W1'], grads['b1'] = self.layers['Affine1'].dW, self.layers['Affine1'].db
         grads['W2'], grads['b2'] = self.layers['Affine2'].dW, self.layers['Affine2'].db
 
-        print("gradient")
         return grads

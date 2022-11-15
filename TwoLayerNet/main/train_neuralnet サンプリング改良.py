@@ -21,17 +21,28 @@ def p(x, N):
     return ( wave_func(x, N) )**2
 
 
-M = 100                                           # 全サンプル数
+M = 10                                          # 全サンプル数
 i = int(M*10)
-sdata= np.empty((M+1, N))
+sdata= np.zeros((M+1, N))
 
-x_train = np.empty((M, N))
-x_test = np.empty((M, N))
+x_train = np.zeros((M, N))
+x_test = np.zeros((M, N))
 
-x = np.empty(N)
+x = np.zeros(N)
 cnt=0
 
-
+# 訓練用入力データx_trainの生成
+for cnt in range(i):
+    #print("x=" + str(x))
+    y = x + np.random.uniform(-1,1,N)           # ランダム関数
+    alpha = min(1, p(y, N)/p(x, N))
+    r = np.random.uniform(0,1)
+    if r > alpha:
+        y = x
+    x = y
+    cnt += 1
+    if cnt%10==0:
+        x_train[int(cnt/10 -1)] = x
 
 # テスト用入力データx_testの生成
 cnt = 0
@@ -83,9 +94,9 @@ network = TwoLayerNet(input_size=N, hidden_size=40, output_size=1)
 
 
 train_size = x_train.shape[0]                           # 全サンプル数
-batch_size = 10**2                                       # バッチサイズ
+batch_size = 5                                       # バッチサイズ
 iter_per_epoch = max(train_size / batch_size, 1)        # 1エポックの更新回数
-iters_num = 10**5                                       # 全更新回数
+iters_num = 20                                       # 全更新回数
 learning_rate = 0.01                                  # 学習率
 
 train_loss_list = []
@@ -112,26 +123,10 @@ iters_num(全更新回数): " + str(iters_num) + "回\n\
 learning_rate(学習率): " + str(learning_rate)
 print(str(condition) + "\n")
      
-def p_improve(x):
-    return network.predict(x)**2            
-
+            
 # 学習
 for i in range(iters_num):
     print(i)
-    
-    # 訓練用入力データx_trainの生成
-    for cnt in range(i):
-        #print("x=" + str(x))
-        y = x + np.random.uniform(-1,1,N)           # ランダム関数
-        alpha = min(1, p_improve(y)/p_improve(x))
-        r = np.random.uniform(0,1)
-        if r > alpha:
-            y = x
-            x = y
-            cnt += 1
-        if cnt%10==0:
-            x_train[int(cnt/10 -1)] = x
-    
     batch_mask = np.random.choice(train_size, batch_size)   # 0からtrain_sizeまでの整数をランダムにbatch_size個抽出して1次元配列にする
     #print("batch_mask=" + str(batch_mask))
     x_batch = x_train[batch_mask]
@@ -157,7 +152,7 @@ for i in range(iters_num):
         train_overlap = network.overlap(x_batch, t_batch)   # オーバーラップ積分の値
         test_overlap = network.overlap(x_test, t_test)      # オーバーラップ積分の値
         diff = network.diff(x_batch, t_batch)
-        print("y-t=" + str(diff))
+        #print("y-t=" + str(diff))
         
         train_err_list.append(train_err)
         test_err_list.append(test_err)
