@@ -24,6 +24,7 @@ def p(x, N):
 M = 10                                          # 全サンプル数
 i = int(M*10)
 sdata= np.empty((M+1, N))
+"aiueo"
 
 x_train = np.empty((M, N))
 x_test = np.empty((M, N))
