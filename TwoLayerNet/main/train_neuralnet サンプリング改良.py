@@ -24,7 +24,7 @@ network = TwoLayerNet(input_size=N, hidden_size=40, output_size=1)
 
 
 train_size = M                                       # 全サンプル数
-iters_num = 10**3                                       # 全更新回数
+iters_num = 300                                       # 全更新回数
 learning_rate = 0.01                                  # 学習率
 
 train_loss_list = []
@@ -120,7 +120,7 @@ for i in range(iters_num):
         train_overlap_list.append(train_overlap)            # リストに格納
         #test_overlap_list.append(test_overlap)
         
-        train_y = network.predict(x_batch)
+        train_y = network.predict(x_train)
         train_y_list.append(train_y) 
         
         
@@ -128,7 +128,7 @@ for i in range(iters_num):
         #print(train_err)                                        # 正しい誤差の平均が表示される
         
         
-print(train_overlap_list)
+#print(train_overlap_list)
 x_array = np.arange(0, iters_num, 1)
 #print(len(train_overlap_list))
 #print(train_overlap_list)                                     # nanになってる
