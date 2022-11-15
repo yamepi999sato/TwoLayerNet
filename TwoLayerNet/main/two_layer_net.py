@@ -47,7 +47,7 @@ class TwoLayerNet:
     def error(self, x, t):                              # 相対誤差 (y-t)/t
         y = self.predict(x)
         error = np.mean((y-t)/t)
-        print("error")
+        #print("error")
         return error
     
     def diff(self, x, t):                               # 絶対誤差 y-t
