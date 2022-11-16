@@ -12,19 +12,14 @@ from main.two_layer_net import TwoLayerNet
 import time
 
 time_sta = time.perf_counter()
-# 研究室でpushできるか確認
 
-# データの読み込み
-# メトロポリス法
+
 N = 5                                             # 粒子数=入力層ユニット数
-M = 10
-
-
-network = TwoLayerNet(input_size=N, hidden_size=40, output_size=1)
-
-
+M = 100                                              # 1会の学習時に作成するサンプル数
+autocorrelation_length = 10                         # 自己相関長
+M_total = int(M * autocorrelation_length)           # 破棄するものも含めてトータルで作成するサンプル
 train_size = M                                       # 全サンプル数
-iters_num = 300                                       # 全更新回数
+iters_num = 10                                       # 全更新回数
 learning_rate = 0.01                                  # 学習率
 
 train_loss_list = []
@@ -37,8 +32,6 @@ train_overlap_list = []
 test_overlap_list = []
 
 
-
-
 #条件を表示
 condition = \
 "input_size(入力層ユニット数) = N(粒子数): " + str(N) + "(個)\n\
@@ -49,37 +42,20 @@ iters_num(全更新回数): " + str(iters_num) + "回\n\
 learning_rate(学習率): " + str(learning_rate)
 print(str(condition) + "\n")
      
-            
+
+network = TwoLayerNet(input_size=N, hidden_size=40, output_size=1)           
 # 学習
-for i in range(iters_num):
-    if i % 10 == 0:
-        print(i)
-    """
-    batch_mask = np.random.choice(train_size, batch_size)   # 0からtrain_sizeまでの整数をランダムにbatch_size個抽出して1次元配列にする
-    #print("batch_mask=" + str(batch_mask))
-    x_batch = x_train[batch_mask]
-    #print(x_batch.shape)                                    # (batch_size, N)
-    #print("x_bathch " + str(x_batch))
-    t_batch = t_train[batch_mask]
-    #print(t_batch.shape)                                    # (batch_size, 1)
-    """
-    
-    
+for iters_index in range(iters_num):
     def p(x):
         y = network.predict(x)
         return y**2
     
-                                             # 全サンプル数
-    i = int(M*10)
-    
-    x_train = np.zeros((M, N))
-    
-    
+    x_train = np.zeros((M, N))        
     x = np.zeros(N)
     cnt=0
 
     # 訓練用入力データx_trainの生成
-    for cnt in range(i):
+    for cnt in range(M_total):
         #print("x=" + str(x))
         y = x + np.random.uniform(-1,1,N)           # ランダム関数
         alpha = min(1, p(y)/p(x))
@@ -91,6 +67,9 @@ for i in range(iters_num):
         if cnt%10==0:
             x_train[int(cnt/10 -1)] = x
     
+    if i>60:
+        print(iters_index)
+        print(x_train)
     t_train = wave_func(x_train, N).reshape(-1, 1)
     #print(x_train.shape)
     #print(t_train.shape)
