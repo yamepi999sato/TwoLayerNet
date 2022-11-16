@@ -12,7 +12,7 @@ from main.two_layer_net import TwoLayerNet
 import time
 
 time_sta = time.perf_counter()
-
+# 研究室でpushできるか確認
 
 # データの読み込み
 # メトロポリス法
@@ -107,7 +107,7 @@ for i in range(iters_num):
     #loss = network.loss(x_train, t_train)                   # 全データから損失関数を計算
     train_loss_list.append(loss)
     
-    if i % iter_per_epoch == 0:                             # 1エポックの更新回数に達した場合の処理
+    if 1:                             # 1エポックの更新回数に達した場合の処理
         train_err = network.error(x_train, t_train)
         #test_err = network.error(x_test, t_test)
         train_overlap = network.overlap(x_train, t_train)   # オーバーラップ積分の値
