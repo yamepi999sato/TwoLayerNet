@@ -127,8 +127,8 @@ for i in range(iters_num):
         r = np.random.uniform(0,1)
         if r > alpha:
             y = x
-            x = y
-            cnt += 1
+        x = y
+        cnt += 1
         if cnt%10==0:
             x_train[int(cnt/10 -1)] = x
     
