@@ -43,7 +43,7 @@ fig.suptitle(
     f"Optimizer:{weight['w1'].__class__.__name__}, "
     f"ElapsedTime:{time.time()-time_start:.2f}s, "
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
-psi2_E = neural_network.calc_exact_psi(xlist_E) ** 2
+psi2_Ex = neural_network.calc_exact_psi(xlist_E) ** 2
 psi2_T = neural_network.calc_train_psi(xlist_E) ** 2
 is_K, Ks_K, Hs_K = zip(*iterData_K)
 is_E, Ks_E, Hs_E = zip(*iterData_E)
@@ -53,7 +53,7 @@ ax1 = fig.add_subplot(121)
 ax1.plot(xlist_K, psi2_K, label="Output after step1")
 ax1.plot(xlist_E, psi2_E, label="Output after step2")
 ax1.plot(xlist_E, psi2_T, label="Train data", linestyle="dotted")
-ax1.plot(xlist_E, psi2_E, label="Exact solution", linestyle="dotted")
+ax1.plot(xlist_E, psi2_Ex, label="Exact solution", linestyle="dotted")
 ax1.set_title("|psi|^2")
 ax1.set_xlabel("x")
 ax1.set_ylabel("probability")

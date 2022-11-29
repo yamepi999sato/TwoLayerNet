@@ -1,3 +1,8 @@
+# 以下3行だけ山本加筆
+import sys, os
+from os.path import dirname, abspath
+sys.path.append(dirname(dirname(__file__)))
+
 import numpy as np
 import matplotlib.pyplot as plt
 import neural_network

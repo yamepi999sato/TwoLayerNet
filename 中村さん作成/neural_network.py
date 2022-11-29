@@ -1,3 +1,8 @@
+# 以下3行だけ山本加筆
+import sys, os
+from os.path import dirname, abspath
+sys.path.append(dirname(__file__))
+
 import numpy as np
 import optimizer
 import parameters as params
@@ -21,9 +26,9 @@ def initialize_weight(opt_class):
 
 def calc_psi(weight, xlist):
     """ネットワークを使ってpsiを計算"""
-    fu1 = np.tanh(weight["w1"].w * xlist + weight["b1"].w)
+    fu1 = np.exp(-(weight["w1"].w * xlist + weight["b1"].w)**2)
     u2 = np.dot(weight["w2"].w.reshape(1, -1), fu1)
-    return np.exp(u2 + weight["b2"].value)
+    return u2 + weight["b2"].value
 
 
 def calc_train_psi(xlist):
