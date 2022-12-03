@@ -26,9 +26,9 @@ def initialize_weight(opt_class):
 
 def calc_psi(weight, xlist):
     """ネットワークを使ってpsiを計算"""
-    fu1 = np.exp(-(weight["w1"].w * xlist + weight["b1"].w)**2)
+    fu1 = np.tanh(weight["w1"].w * xlist + weight["b1"].w)
     u2 = np.dot(weight["w2"].w.reshape(1, -1), fu1)
-    return u2 + weight["b2"].value
+    return np.exp(u2 + weight["b2"].value)
 
 
 def calc_train_psi(xlist):
@@ -51,10 +51,10 @@ def metropolis(calc_p, randomwalk=True, sample_n = params.SAMPLE_N):
     while idx < sample_n:
         new_x = rng.normal(scale=2.0) + (x if randomwalk else 0)
         new_p = calc_p(new_x)
-        if randomwalk and np.abs(new_x)>params.MAX_X:
+        if randomwalk and np.abs(new_x)>params.MAX_X:               # new_xがparamas.MAX_Xを超えていたら、xはサンプリングし直す
             x = rng.normal(scale=2.0)
             p = calc_p(x)
-            continue
+            continue                                                # while内のここより下にある処理を飛ばす
         elif new_p > p * rng.random():
             x, p = new_x, new_p
         xlist[idx] = x
@@ -88,15 +88,19 @@ def update(weight, step, randomwalk):
     if step == 1:
 
         def update_func(Ow):
-            Ow_avg = np.average(Ow, axis=1, keepdims=True)
-            AOw_avg = np.average(Ow * A1, axis=1, keepdims=True)
+            #Ow_avg = np.average(Ow, axis=1, keepdims=True)
+            Ow_avg = np.average(Ow, axis=1).reshape(params.HIDDEN_N, 1)
+            #AOw_avg = np.average(Ow * A1, axis=1, keepdims=True)
+            AOw_avg = np.average(Ow * A1, axis=1).reshape(params.HIDDEN_N, 1)
             return -2 * K * (AOw_avg / A1_avg - Ow_avg)
 
     else:
 
         def update_func(Ow):
-            Ow_avg = np.average(Ow, axis=1, keepdims=True)
-            piHp_Ow_avg = np.average(Ow * phii_H_psi, axis=1, keepdims=True)
+            #Ow_avg = np.average(Ow, axis=1, keepdims=True)
+            Ow_avg = np.average(Ow, axis=1).reshape(params.HIDDEN_N, 1)
+            #piHp_Ow_avg = np.average(Ow * phii_H_psi, axis=1, keepdims=True)
+            piHp_Ow_avg = np.average(Ow * phii_H_psi, axis=1).reshape(params.HIDDEN_N, 1)
             return 2 * (piHp_Ow_avg - Ow_avg * E)
 
     for key, w in weight.items():

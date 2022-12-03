@@ -1,3 +1,8 @@
+# 以下3行だけ山本加筆
+import sys, os
+from os.path import dirname, abspath
+sys.path.append(dirname(__file__))
+
 """ 1次元調和振動子のSchroedinger方程式を機械学習で解く
     ・step1としてTrainPsi（解析解ではない、それらしい関数）との重なり積分を最大化する
     ・step2としてエネルギー期待値を最小化する
