@@ -6,12 +6,12 @@ INITIAL_ETA: 学習係数の初期値
 ITER_NUM_K  : step1(重なり積分最大化)の反復回数
 ITER_NUM_H  : step2(エネルギー最小化)の反復回数
 """
-HIDDEN_N = 100
-SAMPLE_N = 1000
+HIDDEN_N = 5
+SAMPLE_N = 3
 DX = 1e-3
 ETA = 0.1
-ITER_NUM_K = 250
-ITER_NUM_E = 250
+ITER_NUM_K = 10
+ITER_NUM_E = 0
 MAX_X = 5.0
 
 paramter_strings = (

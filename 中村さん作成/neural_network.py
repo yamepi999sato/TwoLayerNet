@@ -26,9 +26,9 @@ def initialize_weight(opt_class):
 
 def calc_psi(weight, xlist):
     """ネットワークを使ってpsiを計算"""
-    fu1 = np.exp(-(weight["w1"].w * xlist + weight["b1"].w)**2)
+    fu1 = np.tanh(weight["w1"].w * xlist + weight["b1"].w)
     u2 = np.dot(weight["w2"].w.reshape(1, -1), fu1)
-    return u2 + weight["b2"].value
+    return np.exp(u2 + weight["b2"].value)
 
 
 def calc_train_psi(xlist):

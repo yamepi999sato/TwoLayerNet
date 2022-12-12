@@ -22,20 +22,21 @@ time_start = time.time()
 # K-maximizing (step1)
 for i in range(params.ITER_NUM_K):
     weight, K, E = neural_network.update(weight, step=1, randomwalk=False)
-    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
+    #print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
     iterData_K.append((i, K, E))
 xlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
 
+#print(weight["w1"].w.shape)
 # E-minimizing (step2)
-for w in weight.values():
-    w.reset_internal_params()
+for w in weight.values():                   # weightは辞書、wにはweightの値が順番に代入される
+    w.reset_internal_params()               # 何をしている？ 
 
 for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
     weight, K, E = neural_network.update(weight, step=2, randomwalk=False)
-    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
+    #print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
     iterData_E.append((i, K, E))
 xlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
-
+"""
 # グラフ化
 fig = plt.figure(figsize=(15, 5))
 fig.suptitle(
@@ -84,3 +85,4 @@ ax3.grid(True)
 
 plt.subplots_adjust(hspace=0.5)
 plt.show()
+"""
