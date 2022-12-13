@@ -1,3 +1,8 @@
+# 以下3行だけ山本加筆
+import sys, os
+from os.path import dirname, abspath
+sys.path.append(dirname(__file__))
+
 import numpy as np
 from parameters import *
 
@@ -10,7 +15,7 @@ def update(data):
     phi = data["phi"]
     beta = data["beta"] = (N_SQRT[1:] * phi[:-1] * phi[1:]).sum()
     data["E"] = -2 * data["J"] * beta**2 
-    data["E"] = (- data["mu"]*phi**2 + 0.5 * (N_SEQ**2 - N_SEQ) * phi**2 ).sum()
+    data["E"] += (- data["mu"]*phi**2 + 0.5 * (N_SEQ**2 - N_SEQ) * phi**2 ).sum()
 
     phi_p = np.append((N_SQRT * phi)[1:], [0.0])
     phi_m = N_SQRT * np.append([0], phi[:-1])
