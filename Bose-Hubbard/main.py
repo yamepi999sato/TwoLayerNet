@@ -11,37 +11,38 @@ import time
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
-import parameters as params
+import parameter as params
 import neural_network
 import optimizer
 import program_check
 
 # ヒストグラムの作成
 #program_check.check_metropolis_sampling()
-
+print(params.N_P)
+print(params.M)
 # 数値計算の本体
-iterData_K, iterData_E = [], []
+iterData_I, iterData_E = [], []
 weight = neural_network.initialize_weight(optimizer.Adam)
 time_start = time.time()
 
 # K-maximizing (step1)
-for i in range(params.ITER_NUM_K):
-    weight, K, E = neural_network.update(weight, step=1, randomwalk=False)
-    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
-    iterData_K.append((i, K, E))
-xlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
+for i in range(params.ITER_NUM_I):
+    weight, I, E = neural_network.update(weight, step=1, randomwalk=False)
+    #print(f"#step={i:04} \t I={I:.4f} \t H={E:.4f}")
+    iterData_I.append((i, I, E))
+xlist_I, psi2_I = neural_network.output_psi2(weight, L=5, N=100)
 
 #print(weight["w1"].w.shape)
 # E-minimizing (step2)
 for w in weight.values():                   # weightは辞書、wにはweightの値が順番に代入される
     w.reset_internal_params()               # 何をしている？ 
 
-for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
-    weight, K, E = neural_network.update(weight, step=2, randomwalk=False)
-    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
-    iterData_E.append((i, K, E))
+for i in range(params.ITER_NUM_I, params.ITER_NUM_I + params.ITER_NUM_E):
+    weight, I, E = neural_network.update(weight, step=2, randomwalk=False)
+    #print(f"#step={i:04} \t I={I:.4f} \t H={E:.4f}")
+    iterData_E.append((i, I, E))
 xlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
-
+"""
 # グラフ化
 fig = plt.figure(figsize=(15, 5))
 fig.suptitle(
@@ -51,12 +52,12 @@ fig.suptitle(
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
 psi2_Ex = neural_network.calc_exact_psi(xlist_E) ** 2
 psi2_T = neural_network.calc_train_psi(xlist_E) ** 2
-is_K, Ks_K, Hs_K = zip(*iterData_K)
+is_I, Ks_I, Hs_I = zip(*iterData_I)
 is_E, Ks_E, Hs_E = zip(*iterData_E)
 
 # 波動関数の2乗の比較
 ax1 = fig.add_subplot(121)
-ax1.plot(xlist_K, psi2_K, label="Output after step1")
+ax1.plot(xlist_I, psi2_I, label="Output after step1")
 ax1.plot(xlist_E, psi2_E, label="Output after step2")
 ax1.plot(xlist_E, psi2_T, label="Train data", linestyle="dotted")
 ax1.plot(xlist_E, psi2_Ex, label="Exact solution", linestyle="dotted")
@@ -68,7 +69,7 @@ ax1.grid(True)
 
 # 重なり積分(K)の収束確認(step2では厳密解と比較)
 ax2 = fig.add_subplot(222)
-ax2.plot(is_K, np.abs(np.array(Ks_K) - 1), label="step1 (K-maximizing)")
+ax2.plot(is_I, np.abs(np.array(Ks_I) - 1), label="step1 (K-maximizing)")
 ax2.plot(is_E, np.abs(np.array(Ks_E) - 1), label="step2 (E-minimizing)")
 ax2.set_title("Error of K (overlap integral)")
 ax2.set_xlabel("iter")
@@ -79,7 +80,7 @@ ax2.grid(True)
 
 # エネルギー(E)の収束確認
 ax3 = fig.add_subplot(224)
-ax3.plot(is_K, np.abs(np.array(Hs_K) - 1), label="step1 (K-maximizing)")
+ax3.plot(is_I, np.abs(np.array(Hs_I) - 1), label="step1 (K-maximizing)")
 ax3.plot(is_E, np.abs(np.array(Hs_E) - 1), label="step2 (E-minimizing)")
 ax3.set_title("Error of H (energy expectation value)")
 ax3.set_xlabel("iter")
@@ -90,3 +91,4 @@ ax3.grid(True)
 
 plt.subplots_adjust(hspace=0.5)
 plt.show()
+"""
