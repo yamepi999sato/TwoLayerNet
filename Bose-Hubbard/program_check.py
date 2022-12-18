@@ -51,5 +51,8 @@ print(metro.shape)
 
 x = np.arange(0, params.SAMPLE_N)
 y = metro[0]
-plt.plot(x, y)
+plt.title("metropolis sampling of Ψ(n)^^2, SAMPLE_N=" + str(params.SAMPLE_N))
+plt.xlabel('n_1')
+plt.ylabel('frequency')
+plt.hist(y, bins=100, density=True, color=(1.0,0,0.0))
 plt.show()
