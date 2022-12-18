@@ -45,7 +45,7 @@ def metropolis(calc_p, randomwalk=False, sample_n = params.SAMPLE_N, M = params.
     while idn < sample_n:
         if randomwalk:
             new_n_vec = n_vec + rng.integers(-np.floor(params.N_P/2), np.floor(params.N_P/2), M, endpoint=True)
-            if (n_vec < 0) or (params.N_P < n_vec):
+            if np.any(n_vec < 0) or np.any(params.N_P < n_vec):
                 n_vec = rng.integers(0, params.N_P, M, endpoint=True)
                 p = calc_p(n_vec)
                 continue

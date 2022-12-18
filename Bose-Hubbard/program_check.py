@@ -5,6 +5,7 @@ sys.path.append(dirname(__file__))
 import numpy as np
 import parameter as params
 import matplotlib.pyplot as plt
+import neural_network
 
 rng = np.random.default_rng()
 
@@ -46,12 +47,13 @@ def metropolis(calc_p, randomwalk=False, sample_n = params.SAMPLE_N, M = params.
         idn += 1
     return nlist
 
+randomwalk = False
 metro = metropolis(calc_train_psi, randomwalk=False, sample_n = params.SAMPLE_N, M = params.M)
 print(metro.shape)
 
 x = np.arange(0, params.SAMPLE_N)
 y = metro[0]
-plt.title("metropolis sampling of Ψ(n)^^2, SAMPLE_N=" + str(params.SAMPLE_N))
+plt.title("metropolis sampling of Ψ(n)^^2, SAMPLE_N=" + str(params.SAMPLE_N) + "N_P=" + str(params.N_P) + ", randomwalk=" + str(randomwalk))
 plt.xlabel('n_1')
 plt.ylabel('frequency')
 plt.hist(y, bins=100, density=True, color=(1.0,0,0.0))
