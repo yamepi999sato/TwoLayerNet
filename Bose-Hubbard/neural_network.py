@@ -26,17 +26,19 @@ def initialize_weight(opt_class):
 
 
 def calc_psi(weight, nlist):
+    """ネットワークを使ってpsiを計算"""
     fu1 = np.tanh(weight["w1"].w * nlist + weight["b1"].w)
     u2 = np.dot(weight["w2"].w.reshape(1, -1), fu1)
     return np.exp(u2 + weight["b2"].value)
 
 
 def calc_train_psi(nlist):
-    # step1のターゲットとなる状態 n=1に鋭いピークを持つガウシアン
+    """step1のターゲットとなる状態 n=1に鋭いピークを持つガウシアン"""
     return np.exp(- ((nlist -1)**2).sum(0)/(2 * 0.5**2) )
 
 
-def metropolis(calc_p, randomwalk=False, sample_n = params.SAMPLE_N, M = params.M):
+def metropolis(calc_p, randomwalk, sample_n = params.SAMPLE_N, M = params.M):
+    """メトロポリス法で|psi|^2を確率分布関数にしてサンプル生成"""
     nlist = np.empty((M, sample_n), dtype=int)
     n_vec = np.zeros(M)
     p = calc_p(n_vec)
@@ -44,15 +46,18 @@ def metropolis(calc_p, randomwalk=False, sample_n = params.SAMPLE_N, M = params.
     idn = 0
     while idn < sample_n:
         if randomwalk:
+            """ランダムウォークの場合"""
             new_n_vec = n_vec + rng.integers(-np.floor(params.N_P/2), np.floor(params.N_P/2), M, endpoint=True)
             if np.any(n_vec < 0) or np.any(params.N_P < n_vec):
                 n_vec = rng.integers(0, params.N_P, M, endpoint=True)
                 p = calc_p(n_vec)
                 continue
         else:
+            """ランダムウォークでない場合"""
             new_n_vec = rng.integers(0, params.N_P, M, endpoint=True)
         new_p = calc_p(new_n_vec)
         
+        """メトロポリステスト"""
         if new_p > p * rng.random():
             n_vec, p = new_n_vec, new_p
         nlist[:, idn] = n_vec
@@ -60,8 +65,41 @@ def metropolis(calc_p, randomwalk=False, sample_n = params.SAMPLE_N, M = params.
     return nlist
 
 
-#def update(weight, step, randomwalk):
+def update(weight, step, randomwalk):
+    nlist = metropolis(lambda nlist:calc_psi(weight, nlist).ravel**2, randomwalk=False)
+    psi = calc_psi(weight, nlist)
+    #DX = params.DX
+    
+    """前もって関数を用意"""
+    def M(n_1, n_2):
+        if (n_1 != 0) and (n_2 != params.N_P):
+            return np.sqrt(n_1 * (n_2 + 1))
+        else:
+            return 0
+    def tlist(i, j):
+        if (0 <= i < params.N_P) and (0 <= j <params.N_P):
+            a = np.zeros(M, params.SAMPLE_N)
+            a[i] = -1
+            a[j] = 1
+            return a
+        else:
+            return 0
+    
+    """エネルギー期待値Eを計算"""
+    H_vec = np.zeros(params.SAMPLE_N)
+    for i in range(params.M):
+        J_term = -params.J * (M(nlist[i], nlist[i+1]) * calc_psi(weight, nlist + tlist(i, i+1)) / psi + M(nlist[i+1], nlist[i]) * calc_psi(weight, nlist + tlist(i+1, i)) / psi)
+        U_term = params.U/2 * nlist[i] * (nlist[i] -1)
+        H_vec += J_term + U_term
+    E = np.average(H_vec)
+    
+    train_psi = calc_train_psi(nlist)
+    
+    "Owの計算(活性化関数はtanhとexp, Owはネットワークの構造だけで決まるので、調和振動子と同じ"
+    weight["w2"].Ow = np.tanh(weight["w1"].w * nlist + weight["b1"].w)
+    weight["b1"].Ow = weight["w2"].w * (1 - weight["w2"].Ow ** 2)
+    weight["w1"].Ow = weight["b1"].Ow * nlist
     
     
-    
+        
         
