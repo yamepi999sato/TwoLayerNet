@@ -93,13 +93,40 @@ def update(weight, step, randomwalk):
         H_vec += J_term + U_term
     E = np.average(H_vec)
     
-    train_psi = calc_train_psi(nlist)
+    "内積Iが計算できない"
+    I = 1
     
-    "Owの計算(活性化関数はtanhとexp, Owはネットワークの構造だけで決まるので、調和振動子と同じ"
-    weight["w2"].Ow = np.tanh(weight["w1"].w * nlist + weight["b1"].w)
+    "Owの計算(活性化関数はtanhとexp)"
+    weight["w2"].Ow = np.tanh(np.dot(weight["w1"].w, nlist) + weight["b1"].w)
     weight["b1"].Ow = weight["w2"].w * (1 - weight["w2"].Ow ** 2)
     weight["w1"].Ow = weight["b1"].Ow * nlist
-    
-    
+    if step ==1:
         
+        def update_func(Ow):
+            return 0
         
+    else:
+        
+        def update_func(Ow):
+            Ow_avg = np.average(Ow, axis=1, keepdims=True)
+            OwH = Ow * H_vec
+            OwH_avg = np.average(OwH, axis=1, keepdims=True)
+            return 2 * (OwH_avg - Ow_avg * E)
+        
+    for key, w in weight.items():
+        if key=="b2":
+            w.update_rough(psi)
+        elif isinstance(w, optimizer.Optimizer):
+            w.update_weight(update_func)
+        else:
+            assert False
+    return weight, I, E
+
+
+
+
+def output_psi2(weight, L, N):
+    """グラフ用の|psi|^2を計算"""
+    xlist = np.linspace(-L / 2, L / 2, N, dtype=float)
+    psi2 = calc_psi(weight, xlist).ravel() ** 2
+    return xlist, psi2 / (np.sum(psi2) * L / N)

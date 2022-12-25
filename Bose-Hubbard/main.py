@@ -24,14 +24,14 @@ print(params.M)
 iterData_I, iterData_E = [], []
 weight = neural_network.initialize_weight(optimizer.Adam)
 time_start = time.time()
-
+"""
 # K-maximizing (step1)
 for i in range(params.ITER_NUM_I):
     weight, I, E = neural_network.update(weight, step=1, randomwalk=False)
     #print(f"#step={i:04} \t I={I:.4f} \t H={E:.4f}")
     iterData_I.append((i, I, E))
 xlist_I, psi2_I = neural_network.output_psi2(weight, L=5, N=100)
-
+"""
 #print(weight["w1"].w.shape)
 # E-minimizing (step2)
 for w in weight.values():                   # weightは辞書、wにはweightの値が順番に代入される
@@ -42,7 +42,7 @@ for i in range(params.ITER_NUM_I, params.ITER_NUM_I + params.ITER_NUM_E):
     #print(f"#step={i:04} \t I={I:.4f} \t H={E:.4f}")
     iterData_E.append((i, I, E))
 xlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
-"""
+
 # グラフ化
 fig = plt.figure(figsize=(15, 5))
 fig.suptitle(
@@ -54,7 +54,7 @@ psi2_Ex = neural_network.calc_exact_psi(xlist_E) ** 2
 psi2_T = neural_network.calc_train_psi(xlist_E) ** 2
 is_I, Ks_I, Hs_I = zip(*iterData_I)
 is_E, Ks_E, Hs_E = zip(*iterData_E)
-
+"""
 # 波動関数の2乗の比較
 ax1 = fig.add_subplot(121)
 ax1.plot(xlist_I, psi2_I, label="Output after step1")
@@ -77,7 +77,7 @@ ax2.set_ylabel("|K-1|")
 ax2.set_yscale("log")
 ax2.legend()
 ax2.grid(True)
-
+"""
 # エネルギー(E)の収束確認
 ax3 = fig.add_subplot(224)
 ax3.plot(is_I, np.abs(np.array(Hs_I) - 1), label="step1 (K-maximizing)")
@@ -91,4 +91,3 @@ ax3.grid(True)
 
 plt.subplots_adjust(hspace=0.5)
 plt.show()
-"""

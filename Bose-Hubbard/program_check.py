@@ -49,8 +49,8 @@ def metropolis(calc_p, randomwalk=False, sample_n = params.SAMPLE_N, M = params.
 
 randomwalk = False
 metro = metropolis(calc_train_psi, randomwalk, sample_n = params.SAMPLE_N, M = params.M)
-print(metro.shape)
-
+#print(metro.shape)
+"""
 x = np.arange(0, params.SAMPLE_N)
 y = metro[0]
 plt.title("metropolis sampling of Ψ(n)^^2, SAMPLE_N=" + str(params.SAMPLE_N) + ", N_P=" + str(params.N_P) + ", randomwalk=" + str(randomwalk))
@@ -58,3 +58,13 @@ plt.xlabel('n_1')
 plt.ylabel('frequency')
 plt.hist(y, bins=100, density=True, color=(1.0,0,0.0))
 plt.show()
+"""
+
+nlist = np.array([[1, 1, 1],[2, 2, 2]])                                       #(M, SAMPLE_N)
+weight = {}
+"M=2, SAMPLE_N=3, HIDDEN_N=4"
+weight["w1"] = np.array([[1, 2], [4, 5],[7, 8], [10, 11]])                    # (HIDDEN_N, M)
+weight["b1"] = np.array([[1, 2, 3]]  )                                        # (1, SANPLE_N)
+weight["w2"] = np.array([[1],[2],[3],[4]])                                    # (HIDDEN_N, 1)
+w2_Ow = np.tanh(np.dot(weight["w1"], nlist) + weight["b1"])
+print(w2_Ow)                                                                    # (HIDDEN_N, SAMPLE_N)
