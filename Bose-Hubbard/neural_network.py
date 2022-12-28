@@ -90,7 +90,8 @@ def update(weight, step, randomwalk):
     for i in range(params.M):
         J_term = -params.J * (M(nlist[i], nlist[i+1]) * calc_psi(weight, nlist + tlist(i, i+1)) / psi + M(nlist[i+1], nlist[i]) * calc_psi(weight, nlist + tlist(i+1, i)) / psi)
         U_term = params.U/2 * nlist[i] * (nlist[i] -1)
-        H_vec += J_term + U_term
+        mu_term = - params.mu * np.sum(nlist, axis=0, keepdims=False)
+        H_vec += J_term + U_term + mu_term
     E = np.average(H_vec)
     
     "内積Iが計算できない"
