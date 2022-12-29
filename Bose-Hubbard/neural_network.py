@@ -90,12 +90,16 @@ def update(weight, step, randomwalk):
     for i in range(params.M):
         J_term = -params.J * (M(nlist[i], nlist[i+1]) * calc_psi(weight, nlist + tlist(i, i+1)) / psi + M(nlist[i+1], nlist[i]) * calc_psi(weight, nlist + tlist(i+1, i)) / psi)
         U_term = params.U/2 * nlist[i] * (nlist[i] -1)
-        mu_term = - params.mu * np.sum(nlist, axis=0, keepdims=False)
+        mu_term = - params.mu * nlist[i]
         H_vec += J_term + U_term + mu_term
     E = np.average(H_vec)
     
-    "内積Iが計算できない"
-    I = 1
+    "重なり積分Kを計算"
+    phi = calc_train_psi(nlist)
+    phipsi = phi/psi
+    K = np.average(phipsi)
+    
+    
     
     "Owの計算(活性化関数はtanhとexp)"
     weight["w2"].Ow = np.tanh(np.dot(weight["w1"].w, nlist) + weight["b1"].w)
@@ -104,7 +108,9 @@ def update(weight, step, randomwalk):
     if step ==1:
         
         def update_func(Ow):
-            return 0
+            phipsiOw = phipsi * Ow
+            phipsiOw_avg = np.average(phipsiOw, axis=1, keepdims=True)
+            return phipsiOw_avg
         
     else:
         
@@ -121,7 +127,7 @@ def update(weight, step, randomwalk):
             w.update_weight(update_func)
         else:
             assert False
-    return weight, I, E
+    return weight, K, E
 
 
 
