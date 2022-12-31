@@ -11,7 +11,7 @@ import time
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
-import parameters as params
+import parameter as params
 import neural_network
 import optimizer
 import program_check
@@ -53,6 +53,7 @@ psi2_Ex = neural_network.calc_exact_psi(xlist_E) ** 2
 psi2_T = neural_network.calc_train_psi(xlist_E) ** 2
 is_K, Ks_K, Hs_K = zip(*iterData_K)
 print(is_K)
+print(Ks_K)
 is_E, Ks_E, Hs_E = zip(*iterData_E)
 
 # 波動関数の2乗の比較
