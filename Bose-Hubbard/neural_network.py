@@ -132,8 +132,8 @@ def update(weight, step, randomwalk):
 
 
 
-def output_psi2(weight, L, N):
+def output_psi2(weight, L, N_P=params.N_P):
     """グラフ用の|psi|^2を計算"""
-    xlist = np.linspace(-L / 2, L / 2, N, dtype=float)
-    psi2 = calc_psi(weight, xlist).ravel() ** 2
+    nilist = np.linspace(0, N_P, dtype=int)
+    psi2 = calc_psi(weight, nilist).ravel() ** 2
     return xlist, psi2 / (np.sum(psi2) * L / N)
