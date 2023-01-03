@@ -11,7 +11,7 @@ import time
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
-import parameters as params
+import parameter as params
 import neural_network
 import optimizer
 import program_check
@@ -29,7 +29,7 @@ for i in range(params.ITER_NUM_K):
     weight, K, E = neural_network.update(weight, step=1, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
     iterData_K.append((i, K, E))
-xlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
+#xlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
 
 # E-minimizing (step2)
 for w in weight.values():
@@ -39,8 +39,10 @@ for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
     weight, K, E = neural_network.update(weight, step=2, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
     iterData_E.append((i, K, E))
-xlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
+#xlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
 
+
+"""
 # グラフ化
 fig = plt.figure(figsize=(15, 5))
 fig.suptitle(
@@ -89,3 +91,4 @@ ax3.grid(True)
 
 plt.subplots_adjust(hspace=0.5)
 plt.show()
+"""
