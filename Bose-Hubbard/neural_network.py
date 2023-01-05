@@ -120,8 +120,10 @@ def update(weight, step, randomwalk):
     
     "重なり積分Kを計算"
     phi = calc_train_psi(nlist)
-    phipsi = phi/psi
-    K = np.average(phipsi)
+    A1 = phi/psi
+    A1_avg = np.average(A1)
+    A2_avg = np.average(A1**2)
+    K = A1_avg**2 / A2_avg
     
     
     
@@ -134,19 +136,22 @@ def update(weight, step, randomwalk):
     if step ==1:
         
         def update_func_b1(Ow):
-            phipsiOw = phipsi * Ow
-            phipsiOw_avg = np.average(phipsiOw, axis=1, keepdims=True)
-            return - phipsiOw_avg
+            Ow_avg = np.average(Ow, axis=1, keepdims=True)
+            AOw = A1 * Ow
+            AOw_avg = np.average(AOw, axis=1, keepdims=True)
+            return -2 * K * (AOw_avg / A1_avg - Ow_avg)
         
         def update_func_w2(Ow):
-            phipsiOw = phipsi * Ow
-            phipsiOw_avg = np.average(phipsiOw, axis=1, keepdims=True).T
-            return - phipsiOw_avg
+            Ow_avg = np.average(Ow, axis=1, keepdims=True).T
+            AOw = A1 * Ow
+            AOw_avg = np.average(AOw, axis=1, keepdims=True).T
+            return -2 * K * (AOw_avg / A1_avg - Ow_avg)
         
         def update_func_w1(Ow):
-            phipsiOw = phipsi * Ow
-            phipsiOw_avg = np.average(phipsiOw, axis=2, keepdims=False)
-            return - phipsiOw_avg
+            Ow_avg = np.average(Ow, axis=2, keepdims=False)
+            AOw = A1 * Ow
+            AOw_avg = np.average(AOw, axis=2, keepdims=False)
+            return -2 * K * (AOw_avg / A1_avg - Ow_avg)
         
     else:
         
@@ -159,10 +164,7 @@ def update(weight, step, randomwalk):
         def update_func_w2(Ow):
             Ow_avg = np.average(Ow, axis=1, keepdims=True).T
             OwH = Ow * H_vec
-            #print(OwH.shape)
-            OwH_avg__ = np.average(OwH, axis=1, keepdims=True)
-            #print(OwH_avg__.shape)
-            OwH_avg = OwH_avg__.T
+            OwH_avg = np.average(OwH, axis=1, keepdims=True).T
             return 2 * (OwH_avg - Ow_avg * E)
         
         def update_func_w1(Ow):
