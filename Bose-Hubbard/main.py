@@ -29,7 +29,7 @@ for i in range(params.ITER_NUM_K):
     weight, K, E = neural_network.update(weight, step=1, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
     iterData_K.append((i, K, E))
-#xlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
+    #nlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
 
 # E-minimizing (step2)
 for w in weight.values():
@@ -39,8 +39,18 @@ for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
     weight, K, E = neural_network.update(weight, step=2, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
     iterData_E.append((i, K, E))
-#xlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
+#nlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
 
+
+is_K, Ks_K, Hs_K = zip(*iterData_K)
+is_E, Ks_E, Hs_E = zip(*iterData_E)
+plt.plot(is_K, Ks_K)
+plt.plot(is_K, Hs_K)
+plt.show()
+
+plt.plot(is_E, Ks_E)
+plt.plot(is_E, Hs_E)
+plt.show()
 
 """
 # グラフ化
@@ -50,22 +60,10 @@ fig.suptitle(
     f"Optimizer:{weight['w1'].__class__.__name__}, "
     f"ElapsedTime:{time.time()-time_start:.2f}s, "
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
-psi2_Ex = neural_network.calc_exact_psi(xlist_E) ** 2
-psi2_T = neural_network.calc_train_psi(xlist_E) ** 2
+psi2_Ex = neural_network.calc_exact_psi(nlist_E) ** 2
+psi2_T = neural_network.calc_train_psi(nlist_E) ** 2
 is_K, Ks_K, Hs_K = zip(*iterData_K)
 is_E, Ks_E, Hs_E = zip(*iterData_E)
-
-# 波動関数の2乗の比較
-ax1 = fig.add_subplot(121)
-ax1.plot(xlist_K, psi2_K, label="Output after step1")
-ax1.plot(xlist_E, psi2_E, label="Output after step2")
-ax1.plot(xlist_E, psi2_T, label="Train data", linestyle="dotted")
-ax1.plot(xlist_E, psi2_Ex, label="Exact solution", linestyle="dotted")
-ax1.set_title("|psi|^2")
-ax1.set_xlabel("x")
-ax1.set_ylabel("probability")
-ax1.legend()
-ax1.grid(True)
 
 # 重なり積分(K)の収束確認(step2では厳密解と比較)
 ax2 = fig.add_subplot(222)

@@ -26,7 +26,7 @@ N_SEQ = np.array(range(N_P))
 N_SQRT = np.sqrt(N_SEQ)
 
 HIDDEN_N = 40
-SAMPLE_N = 100000
+SAMPLE_N = 1000
 DX = 1e-3
 ITER_NUM_K = 250
 ITER_NUM_E = 250

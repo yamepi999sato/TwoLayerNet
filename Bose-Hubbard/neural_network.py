@@ -18,7 +18,7 @@ def initialize_weight(opt_class):
         rng.normal(scale=1 / np.sqrt(HIDDEN_N), size=(HIDDEN_N, M))
     )
     weight["w2"] = opt_class(
-        rng.normal(scale=1 / np.sqrt(HIDDEN_N), size=(HIDDEN_N, 1))
+        rng.normal(scale=1 / np.sqrt(HIDDEN_N), size=(1, HIDDEN_N))
     )
     weight["b1"] = opt_class(np.zeros((HIDDEN_N, 1)))
     weight["b2"] = optimizer.Normalizer()
@@ -27,12 +27,12 @@ def initialize_weight(opt_class):
 
 def calc_psi(weight, nlist):
     """ネットワークを使ってpsiを計算"""
-    fu1 = np.tanh((weight["w1"].w @ nlist) + weight["b1"].w)
+    fu1 = np.tanh(np.dot(weight["w1"].w, nlist) + weight["b1"].w)
     #print("w1: " + str(weight["w1"].w.shape))
     #print("nlist: " + str(nlist.shape))
     #print(fu1.shape)
-    u2 = np.dot(weight["w2"].w.reshape(1, -1), fu1)
-    #print("w2: " + str(weight["w2"].w.reshape(1, -1).shape))
+    u2 = np.dot(weight["w2"].w, fu1)
+    #print("w2: " + str(weight["w2"].w.shape))
     #print("u2: " + str(u2.shape))
     return np.exp(u2 + weight["b2"].value)
 
@@ -47,7 +47,7 @@ def metropolis(calc_p, randomwalk, sample_n = params.SAMPLE_N, M = params.M):
     nlist = np.empty((M, sample_n), dtype=int)
     n_vec = np.zeros((M, 1))                                            #書き足した
     p = calc_p(n_vec)
-    print("p: " + str(p.shape))
+    #print("p: " + str(p.shape))
     assert np.all(p > 1e-10)
     idn = 0
     while idn < sample_n:
@@ -105,6 +105,9 @@ def update(weight, step, randomwalk):
     H_vec = np.zeros(params.SAMPLE_N)
     for i in range(params.M):
         if i+1 < params.M:
+            #print(M(nlist[i], nlist[i+1]))
+            #print(calc_psi(weight, nlist + tlist(i, i+1)).shape)
+            #print(psi.shape)
             J_term = -params.J * (M(nlist[i], nlist[i+1]) * calc_psi(weight, nlist + tlist(i, i+1)) / psi + M(nlist[i+1], nlist[i]) * calc_psi(weight, nlist + tlist(i+1, i)) / psi)
         elif i+1 == params.M:
             J_term = np.zeros(params.SAMPLE_N)
@@ -112,7 +115,7 @@ def update(weight, step, randomwalk):
         U_term = params.U/2 * nlist[i] * (nlist[i] -1)
         MU_term = - params.MU * nlist[i] + params.MU * params.N_tot
         H_vec += J_term + U_term + MU_term
-        print("H_vec: " + str(H_vec.shape))
+        #print("H_vec: " + str(H_vec.shape))
     E = np.average(H_vec)
     
     "重なり積分Kを計算"
@@ -124,30 +127,59 @@ def update(weight, step, randomwalk):
     
     "Owの計算(活性化関数はtanhとexp)"
     weight["w2"].Ow = np.tanh(np.dot(weight["w1"].w, nlist) + weight["b1"].w)
-    print("W2.Ow: " + str(weight["w2"].Ow.shape))
-    weight["b1"].Ow = weight["w2"].w * (1 - weight["w2"].Ow ** 2)
-    print("b1.Ow: " + str(weight["b1"].Ow.shape))
-    weight["w1"].Ow = weight["b1"].Ow * nlist
+    #print("W2.Ow: " + str(weight["w2"].Ow.shape))
+    weight["b1"].Ow = weight["w2"].w.reshape(-1, 1) * (1 - weight["w2"].Ow ** 2)
+    #print("b1.Ow: " + str(weight["b1"].Ow.shape))
+    weight["w1"].Ow = weight["b1"].Ow.reshape(params.HIDDEN_N, 1, params.SAMPLE_N) * nlist.reshape(1, params.M, params.SAMPLE_N)
     if step ==1:
         
-        def update_func(Ow):
+        def update_func_b1(Ow):
             phipsiOw = phipsi * Ow
             phipsiOw_avg = np.average(phipsiOw, axis=1, keepdims=True)
-            return phipsiOw_avg
+            return - phipsiOw_avg
+        
+        def update_func_w2(Ow):
+            phipsiOw = phipsi * Ow
+            phipsiOw_avg = np.average(phipsiOw, axis=1, keepdims=True).T
+            return - phipsiOw_avg
+        
+        def update_func_w1(Ow):
+            phipsiOw = phipsi * Ow
+            phipsiOw_avg = np.average(phipsiOw, axis=2, keepdims=False)
+            return - phipsiOw_avg
         
     else:
         
-        def update_func(Ow):
+        def update_func_b1(Ow):
             Ow_avg = np.average(Ow, axis=1, keepdims=True)
             OwH = Ow * H_vec
             OwH_avg = np.average(OwH, axis=1, keepdims=True)
             return 2 * (OwH_avg - Ow_avg * E)
         
+        def update_func_w2(Ow):
+            Ow_avg = np.average(Ow, axis=1, keepdims=True).T
+            OwH = Ow * H_vec
+            #print(OwH.shape)
+            OwH_avg__ = np.average(OwH, axis=1, keepdims=True)
+            #print(OwH_avg__.shape)
+            OwH_avg = OwH_avg__.T
+            return 2 * (OwH_avg - Ow_avg * E)
+        
+        def update_func_w1(Ow):
+            Ow_avg = np.average(Ow, axis=2, keepdims=False)
+            OwH = Ow * H_vec
+            OwH_avg = np.average(OwH, axis=2, keepdims=False)
+            return 2 * (OwH_avg - Ow_avg * E)
+        
     for key, w in weight.items():
         if key=="b2":
             w.update_rough(psi)
-        elif isinstance(w, optimizer.Optimizer):
-            w.update_weight(update_func)
+        elif key=="b1" and isinstance(w, optimizer.Optimizer):
+            w.update_weight(update_func_b1)
+        elif key=="w2" and isinstance(w, optimizer.Optimizer):
+            w.update_weight(update_func_w2)
+        elif key=="w1" and isinstance(w, optimizer.Optimizer):
+            w.update_weight(update_func_w1)
         else:
             assert False
     return weight, K, E
@@ -159,4 +191,4 @@ def output_psi2(weight, L, N_P=params.N_P):
     """グラフ用の|psi|^2を計算"""
     nilist = np.linspace(0, N_P, dtype=int)
     psi2 = calc_psi(weight, nilist).ravel() ** 2
-    return xlist, psi2 / (np.sum(psi2) * L / N)
+    return nlist, psi2 / (np.sum(psi2) * L / N)

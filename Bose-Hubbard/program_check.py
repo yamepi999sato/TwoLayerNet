@@ -117,6 +117,9 @@ j=2
 a = np.zeros((M, SAMPLE_N))
 a[i] = -1
 a[j] = 1
-print(a)
+#print(a)
 
+nlist=np.random.rand(M, SAMPLE_N)
+psi = np.exp(- ((nlist -1)**2).sum(0)/(2 * 0.5**2) )
+print(psi)
 
