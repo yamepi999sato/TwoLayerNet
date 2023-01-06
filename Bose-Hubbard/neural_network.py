@@ -83,10 +83,7 @@ if np.all(p > 1e-10):
 def update(weight, step, randomwalk):
     nlist = metropolis(lambda nlist:calc_psi(weight, nlist).ravel() **2, randomwalk=False)
     psi = calc_psi(weight, nlist)
-    #DX = params.DX
     
-    
-    """if (n_1 != 0) and (n_2 != params.N_P)):"""
     """前もって関数を用意"""
     def M(n_1, n_2, dtyape=int):                        
         return np.sqrt(np.where(n_2 == params.M, 0, n_2) * n_1)
@@ -100,10 +97,6 @@ def update(weight, step, randomwalk):
         else:
             return 0
         
-        
-    
-    
-    
     
     """エネルギー期待値Eを計算"""
     H_vec = np.zeros(params.SAMPLE_N)
@@ -115,6 +108,7 @@ def update(weight, step, randomwalk):
         H_vec += J_term + U_term + MU_term
         #print("H_vec: " + str(H_vec.shape))
     E = np.average(H_vec)
+
     
     "重なり積分Kを計算"
     phi = calc_train_psi(nlist)
@@ -123,6 +117,11 @@ def update(weight, step, randomwalk):
     A2_avg = np.average(A1**2)
     K = A1_avg**2 / A2_avg
     
+    "サイト1の粒子数"
+    n_1 = np.average(nlist[0])
+    
+    "1サイトあたりの平均の粒子数"
+    n_avg = np.average(nlist)
     
     
     "Owの計算(活性化関数はtanhとexp)"
@@ -182,7 +181,7 @@ def update(weight, step, randomwalk):
             w.update_weight(update_func_w1)
         else:
             assert False
-    return weight, K, E
+    return weight, K, E, n_1, n_avg
 
 
 

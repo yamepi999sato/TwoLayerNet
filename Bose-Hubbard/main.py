@@ -26,9 +26,9 @@ time_start = time.time()
 
 # K-maximizing (step1)
 for i in range(params.ITER_NUM_K):
-    weight, K, E = neural_network.update(weight, step=1, randomwalk=False)
+    weight, K, E, n_1, n_avg = neural_network.update(weight, step=1, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
-    iterData_K.append((i, K, E))
+    iterData_K.append((i, K, E, n_1, n_avg))
     #nlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
 
 # E-minimizing (step2)
@@ -36,9 +36,9 @@ for w in weight.values():
     w.reset_internal_params()
 
 for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
-    weight, K, E = neural_network.update(weight, step=2, randomwalk=False)
+    weight, K, E, n_1, n_avg = neural_network.update(weight, step=2, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
-    iterData_E.append((i, K, E))
+    iterData_E.append((i, K, E, n_1, n_avg))
 #nlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
 
 
@@ -48,13 +48,33 @@ fig.suptitle(
     f"Optimizer:{weight['w1'].__class__.__name__}, "
     f"ElapsedTime:{time.time()-time_start:.2f}s, "
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
-is_K, Ks_K, Hs_K = zip(*iterData_K)
-is_E, Ks_E, Hs_E = zip(*iterData_E)
+is_K, Ks_K, Hs_K, ns_K, n_avg_K = zip(*iterData_K)
+is_E, Ks_E, Hs_E, ns_E, n_avg_E = zip(*iterData_E)
 
+
+# サイト1の粒子数
+ax2 = fig.add_subplot(221)
+ax2.plot(is_K, (np.array(ns_K) ), label="step1 (K-maximizing)")
+ax2.plot(is_E, (np.array(ns_E) ), label="step2 (E-minimizing)")
+ax2.set_title("n_1 (number of particles on site1)")
+ax2.set_xlabel("iter")
+ax2.set_ylabel("n_1")
+ax2.legend()
+ax2.grid(True)
+
+# 1サイトあたりの平均の粒子数
+ax2 = fig.add_subplot(223)
+ax2.plot(is_K, (np.array(n_avg_K) ), label="step1 (K-maximizing)")
+ax2.plot(is_E, (np.array(n_avg_E) ), label="step2 (E-minimizing)")
+ax2.set_title("<n> (average number of particles)")
+ax2.set_xlabel("iter")
+ax2.set_ylabel("<n>")
+ax2.legend()
+ax2.grid(True)
 
 
 # 重なり積分(K)の収束確認(step2では厳密解と比較)
-ax2 = fig.add_subplot(121)
+ax2 = fig.add_subplot(222)
 ax2.plot(is_K, (np.array(Ks_K) ), label="step1 (K-maximizing)")
 ax2.plot(is_E, (np.array(Ks_E) ), label="step2 (E-minimizing)")
 ax2.set_title("K (overlap integral)")
@@ -65,7 +85,7 @@ ax2.legend()
 ax2.grid(True)
 
 # エネルギー(E)の収束確認
-ax3 = fig.add_subplot(122)
+ax3 = fig.add_subplot(224)
 ax3.plot(is_K, (np.array(Hs_K) ), label="step1 (K-maximizing)")
 ax3.plot(is_E, (np.array(Hs_E) ), label="step2 (E-minimizing)")
 ax3.set_title("E (energy expectation value)")
