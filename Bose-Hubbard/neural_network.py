@@ -48,7 +48,7 @@ def metropolis(calc_p, randomwalk, sample_n = params.SAMPLE_N, M = params.M):
     n_vec = np.zeros((M, 1))                                            #書き足した
     p = calc_p(n_vec)
     #print("p: " + str(p.shape))
-    assert np.all(p > 1e-10)
+    #assert np.all(p > 1e-10)
     idn = 0
     while idn < sample_n:
         if randomwalk:
@@ -61,7 +61,8 @@ def metropolis(calc_p, randomwalk, sample_n = params.SAMPLE_N, M = params.M):
         else:
             """ランダムウォークでない場合"""
             new_n_vec = rng.integers(0, params.N_P, M, endpoint=True)
-        new_p = calc_p(new_n_vec)
+        new_p = calc_p(new_n_vec.reshape(-1, 1))
+        
         
         """メトロポリステスト"""
         if np.all(new_p > p * rng.random()):
@@ -80,40 +81,37 @@ if np.all(p > 1e-10):
     print("OK")
 """
 def update(weight, step, randomwalk):
-    nlist = metropolis(lambda nlist:calc_psi(weight, nlist), randomwalk=False)
+    nlist = metropolis(lambda nlist:calc_psi(weight, nlist).ravel() **2, randomwalk=False)
     psi = calc_psi(weight, nlist)
     #DX = params.DX
     
     
     """if (n_1 != 0) and (n_2 != params.N_P)):"""
     """前もって関数を用意"""
-    def M(n_1, n_2, dtyape=int):
-        if np.all(n_1 != 0) and np.all(n_2 != params.N_P):
-            return np.sqrt(n_1 * (n_2 + 1))
-        else:
-            return 0
+    def M(n_1, n_2, dtyape=int):                        
+        return np.sqrt(np.where(n_2 == params.M, 0, n_2) * n_1)
+    
     def tlist(i, j):
-        if (0 <= i < params.N_P) and (0 <= j <params.N_P):
+        if (0 <= i < params.M) and (0 <= j <params.M):
             a = np.zeros((params.M, params.SAMPLE_N))
             a[i] = -1
             a[j] = 1
             return a
         else:
             return 0
+        
+        
+    
+    
+    
     
     """エネルギー期待値Eを計算"""
     H_vec = np.zeros(params.SAMPLE_N)
     for i in range(params.M):
-        if i+1 < params.M:
-            #print(M(nlist[i], nlist[i+1]))
-            #print(calc_psi(weight, nlist + tlist(i, i+1)).shape)
-            #print(psi.shape)
-            J_term = -params.J * (M(nlist[i], nlist[i+1]) * calc_psi(weight, nlist + tlist(i, i+1)) / psi + M(nlist[i+1], nlist[i]) * calc_psi(weight, nlist + tlist(i+1, i)) / psi)
-        elif i+1 == params.M:
-            J_term = np.zeros(params.SAMPLE_N)
+        J_term = -params.J * (M(nlist[i], nlist[(i+1)%params.M]) * calc_psi(weight, nlist + tlist(i, (i+1)%params.M)) / psi + M(nlist[(i+1)%params.M], nlist[i]) * calc_psi(weight, nlist + tlist((i+1)%params.M, i)) / psi)
         J_term = J_term.ravel()
         U_term = params.U/2 * nlist[i] * (nlist[i] -1)
-        MU_term = - params.MU * nlist[i] + params.MU * params.N_tot
+        MU_term = - params.MU * nlist[i]
         H_vec += J_term + U_term + MU_term
         #print("H_vec: " + str(H_vec.shape))
     E = np.average(H_vec)

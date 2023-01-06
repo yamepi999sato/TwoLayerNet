@@ -42,15 +42,42 @@ for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
 #nlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
 
 
+fig = plt.figure(figsize=(15, 5))
+fig.suptitle(
+    params.paramter_strings + ", "
+    f"Optimizer:{weight['w1'].__class__.__name__}, "
+    f"ElapsedTime:{time.time()-time_start:.2f}s, "
+    f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
 is_K, Ks_K, Hs_K = zip(*iterData_K)
 is_E, Ks_E, Hs_E = zip(*iterData_E)
-plt.plot(is_K, Ks_K)
-plt.plot(is_K, Hs_K)
+
+
+
+# 重なり積分(K)の収束確認(step2では厳密解と比較)
+ax2 = fig.add_subplot(121)
+ax2.plot(is_K, (np.array(Ks_K) ), label="step1 (K-maximizing)")
+ax2.plot(is_E, (np.array(Ks_E) ), label="step2 (E-minimizing)")
+ax2.set_title("K (overlap integral)")
+ax2.set_xlabel("iter")
+ax2.set_ylabel("K")
+#ax2.set_yscale("log")
+ax2.legend()
+ax2.grid(True)
+
+# エネルギー(E)の収束確認
+ax3 = fig.add_subplot(122)
+ax3.plot(is_K, (np.array(Hs_K) ), label="step1 (K-maximizing)")
+ax3.plot(is_E, (np.array(Hs_E) ), label="step2 (E-minimizing)")
+ax3.set_title("E (energy expectation value)")
+ax3.set_xlabel("iter")
+ax3.set_ylabel("E")
+#ax3.set_yscale("log")
+ax3.legend()
+ax3.grid(True)
+
+plt.subplots_adjust(hspace=0.5)
 plt.show()
 
-plt.plot(is_E, Ks_E)
-plt.plot(is_E, Hs_E)
-plt.show()
 
 """
 # グラフ化

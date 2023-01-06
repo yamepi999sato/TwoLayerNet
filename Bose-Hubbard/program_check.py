@@ -121,5 +121,5 @@ a[j] = 1
 
 nlist=np.random.rand(M, SAMPLE_N)
 psi = np.exp(- ((nlist -1)**2).sum(0)/(2 * 0.5**2) )
-print(psi)
+print(psi.shape)
 

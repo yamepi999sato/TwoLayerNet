@@ -15,7 +15,6 @@ GRID    : 相図の刻み幅
 # constants
 M = 3
 N_P = 5
-N_tot = 15
 ETA = 0.1
 ITER_MAX = 10000
 EPS = 1e-6
@@ -33,8 +32,8 @@ ITER_NUM_E = 250
 MAX_X = 5.0
 
 
-J = 1
-MU = 1
+J = 0
+MU = 0.5
 U = 1
 
 paramter_strings = (
