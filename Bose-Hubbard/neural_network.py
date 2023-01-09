@@ -69,7 +69,8 @@ def metropolis(calc_p, randomwalk, sample_n = params.SAMPLE_N, M = params.M):
             n_vec, p = new_n_vec, new_p
         nlist[:, idn] = n_vec.ravel()
         idn += 1
-    return nlist
+    print(p)
+    return nlist, p
 """
 weight = initialize_weight(optimizer.Adam)
 #nlist = rng.normal(size=(params.M, params.SAMPLE_N))
@@ -81,7 +82,7 @@ if np.all(p > 1e-10):
     print("OK")
 """
 def update(weight, step, randomwalk):
-    nlist = metropolis(lambda nlist:calc_psi(weight, nlist).ravel() **2, randomwalk=False)
+    nlist, p = metropolis(lambda nlist:calc_psi(weight, nlist).ravel() **2, randomwalk=False)
     psi = calc_psi(weight, nlist)
     
     """前もって関数を用意"""
@@ -133,41 +134,53 @@ def update(weight, step, randomwalk):
     if step ==1:
         
         def update_func_b1(Ow):
-            Ow_avg = np.average(Ow, axis=1, keepdims=True)
+            #Ow_avg = np.average(Ow, axis=1, keepdims=True)
+            Ow_avg = np.average(Ow, axis=1).reshape(-1, 1)
             AOw = A1 * Ow
-            AOw_avg = np.average(AOw, axis=1, keepdims=True)
+            #AOw_avg = np.average(AOw, axis=1, keepdims=True)
+            AOw_avg = np.average(AOw, axis=1).reshape(-1, 1)
             return -2 * K * (AOw_avg / A1_avg - Ow_avg)
         
         def update_func_w2(Ow):
-            Ow_avg = np.average(Ow, axis=1, keepdims=True).T
+            #Ow_avg = np.average(Ow, axis=1, keepdims=True).T
+            Ow_avg = np.average(Ow, axis=1).reshape(1, -1)
             AOw = A1 * Ow
-            AOw_avg = np.average(AOw, axis=1, keepdims=True).T
+            #AOw_avg = np.average(AOw, axis=1, keepdims=True).T
+            AOw_avg = np.average(AOw, axis=1).reshape(1, -1)
             return -2 * K * (AOw_avg / A1_avg - Ow_avg)
         
         def update_func_w1(Ow):
-            Ow_avg = np.average(Ow, axis=2, keepdims=False)
+            #Ow_avg = np.average(Ow, axis=2, keepdims=False)
+            Ow_avg = np.average(Ow, axis=2)
             AOw = A1 * Ow
-            AOw_avg = np.average(AOw, axis=2, keepdims=False)
+            #AOw_avg = np.average(AOw, axis=2, keepdims=False)
+            AOw_avg = np.average(AOw, axis=2)
             return -2 * K * (AOw_avg / A1_avg - Ow_avg)
         
     else:
         
         def update_func_b1(Ow):
-            Ow_avg = np.average(Ow, axis=1, keepdims=True)
+            #Ow_avg = np.average(Ow, axis=1, keepdims=True)
+            Ow_avg = np.average(Ow, axis=1).reshape(-1, 1)
             OwH = Ow * H_vec
-            OwH_avg = np.average(OwH, axis=1, keepdims=True)
+            #OwH_avg = np.average(OwH, axis=1, keepdims=True)
+            OwH_avg = np.average(OwH, axis=1).reshape(-1, 1)
             return 2 * (OwH_avg - Ow_avg * E)
         
         def update_func_w2(Ow):
-            Ow_avg = np.average(Ow, axis=1, keepdims=True).T
+            #Ow_avg = np.average(Ow, axis=1, keepdims=True).T
+            Ow_avg = np.average(Ow, axis=1).reshape(1, -1)
             OwH = Ow * H_vec
-            OwH_avg = np.average(OwH, axis=1, keepdims=True).T
+            #OwH_avg = np.average(OwH, axis=1, keepdims=True).T
+            OwH_avg = np.average(OwH, axis=1).reshape(1, -1)
             return 2 * (OwH_avg - Ow_avg * E)
         
         def update_func_w1(Ow):
-            Ow_avg = np.average(Ow, axis=2, keepdims=False)
+            #Ow_avg = np.average(Ow, axis=2, keepdims=False)
+            Ow_avg = np.average(Ow, axis=2)
             OwH = Ow * H_vec
-            OwH_avg = np.average(OwH, axis=2, keepdims=False)
+            #OwH_avg = np.average(OwH, axis=2, keepdims=False)
+            OwH_avg = np.average(OwH, axis=2)
             return 2 * (OwH_avg - Ow_avg * E)
         
     for key, w in weight.items():
@@ -181,13 +194,7 @@ def update(weight, step, randomwalk):
             w.update_weight(update_func_w1)
         else:
             assert False
-    return weight, K, E, n_1, n_avg
+    return weight, K, E, n_1, n_avg, p
 
 
 
-
-def output_psi2(weight, L, N_P=params.N_P):
-    """グラフ用の|psi|^2を計算"""
-    nilist = np.linspace(0, N_P, dtype=int)
-    psi2 = calc_psi(weight, nilist).ravel() ** 2
-    return nlist, psi2 / (np.sum(psi2) * L / N)

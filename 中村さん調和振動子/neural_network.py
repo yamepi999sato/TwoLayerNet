@@ -59,7 +59,8 @@ def metropolis(calc_p, randomwalk=True, sample_n = params.SAMPLE_N):
             x, p = new_x, new_p
         xlist[idx] = x
         idx += 1
-    return xlist
+    print(p)
+    return xlist, p
 
 
 def update(weight, step, randomwalk):
@@ -68,7 +69,7 @@ def update(weight, step, randomwalk):
     重みパラメータを更新する。
     新しい重みパラメーターとグラフ用のデータを返す
     """
-    xlist = metropolis(lambda x: calc_psi(weight, x).ravel() ** 2, randomwalk)
+    xlist, p = metropolis(lambda x: calc_psi(weight, x).ravel() ** 2, randomwalk)
     psi = calc_psi(weight, xlist)
 
     DX = params.DX
@@ -110,7 +111,7 @@ def update(weight, step, randomwalk):
             w.update_weight(update_func)
         else:
             assert False
-    return weight, K, E
+    return weight, K, E, p
 
 
 def output_psi2(weight, L, N):

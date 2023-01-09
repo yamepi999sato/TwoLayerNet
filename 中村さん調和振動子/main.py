@@ -11,7 +11,7 @@ import time
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
-import parameter as params
+import parameters as params
 import neural_network
 import optimizer
 import program_check
@@ -26,9 +26,9 @@ time_start = time.time()
 
 # K-maximizing (step1)
 for i in range(params.ITER_NUM_K):
-    weight, K, E = neural_network.update(weight, step=1, randomwalk=False)
+    weight, K, E, p = neural_network.update(weight, step=1, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
-    iterData_K.append((i, K, E))
+    iterData_K.append((i, K, E, p))
 xlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
 
 #print(weight["w1"].w.shape)
@@ -39,7 +39,7 @@ for w in weight.values():                   # weightは辞書、wにはweightの
 for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
     weight, K, E = neural_network.update(weight, step=2, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
-    iterData_E.append((i, K, E))
+    iterData_E.append((i, K, E, p))
 xlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
 
 # グラフ化
@@ -51,10 +51,8 @@ fig.suptitle(
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
 psi2_Ex = neural_network.calc_exact_psi(xlist_E) ** 2
 psi2_T = neural_network.calc_train_psi(xlist_E) ** 2
-is_K, Ks_K, Hs_K = zip(*iterData_K)
-print(is_K)
-print(Ks_K)
-is_E, Ks_E, Hs_E = zip(*iterData_E)
+is_K, Ks_K, Hs_K, ps_K = zip(*iterData_K)
+is_E, Ks_E, Hs_E, ps_E = zip(*iterData_E)
 
 # 波動関数の2乗の比較
 ax1 = fig.add_subplot(121)
