@@ -65,6 +65,7 @@ ax2.set_ylabel("n_1")
 ax2.legend()
 ax2.grid(True)
 """
+
 # サンプリング時の確率
 ax2 = fig.add_subplot(221)
 ax2.plot(is_K, (np.array(ps_K) ), label="step1 (K-maximizing)")
@@ -76,6 +77,18 @@ ax2.set_yscale("log")
 ax2.legend()
 ax2.grid(True)
 
+# サンプリング時の確率
+ax2 = fig.add_subplot(223)
+ax2.plot(is_K, (np.array(ps_K) ), label="step1 (K-maximizing)")
+ax2.plot(is_E, (np.array(ps_E) ), label="step2 (E-minimizing)")
+ax2.set_title("psi(nlist)**2 of metropolis sampling")
+ax2.set_xlabel("iter")
+ax2.set_ylim(-1, 3)
+#ax2.set_yscale("log")
+ax2.legend()
+ax2.grid(True)
+
+"""
 # 1サイトあたりの平均の粒子数
 ax2 = fig.add_subplot(223)
 ax2.plot(is_K, (np.array(n_avg_K) ), label="step1 (K-maximizing)")
@@ -85,7 +98,7 @@ ax2.set_xlabel("iter")
 ax2.set_ylabel("<n>")
 ax2.legend()
 ax2.grid(True)
-
+"""
 
 # 重なり積分(K)の収束確認(step2では厳密解と比較)
 ax2 = fig.add_subplot(222)
