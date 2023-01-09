@@ -37,7 +37,7 @@ for w in weight.values():                   # weightは辞書、wにはweightの
     w.reset_internal_params()               # 何をしている？ 
 
 for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
-    weight, K, E = neural_network.update(weight, step=2, randomwalk=False)
+    weight, K, E, p = neural_network.update(weight, step=2, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
     iterData_E.append((i, K, E, p))
 xlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
@@ -54,6 +54,17 @@ psi2_T = neural_network.calc_train_psi(xlist_E) ** 2
 is_K, Ks_K, Hs_K, ps_K = zip(*iterData_K)
 is_E, Ks_E, Hs_E, ps_E = zip(*iterData_E)
 
+# サンプリング時の確率
+ax2 = fig.add_subplot(121)
+ax2.plot(is_K, (np.array(ps_K) ), label="step1 (K-maximizing)")
+ax2.plot(is_E, (np.array(ps_E) ), label="step2 (E-minimizing)")
+ax2.set_title("psi(nlist)**2 of metropolis sampling")
+ax2.set_xlabel("iter")
+ax2.set_ylabel("psi**2")
+ax2.set_yscale("log")
+ax2.legend()
+ax2.grid(True)
+"""
 # 波動関数の2乗の比較
 ax1 = fig.add_subplot(121)
 ax1.plot(xlist_K, psi2_K, label="Output after step1")
@@ -65,7 +76,7 @@ ax1.set_xlabel("x")
 ax1.set_ylabel("probability")
 ax1.legend()
 ax1.grid(True)
-
+"""
 # 重なり積分(K)の収束確認(step2では厳密解と比較)
 ax2 = fig.add_subplot(222)
 ax2.plot(is_K, np.abs(np.array(Ks_K) - 1), label="step1 (K-maximizing)")

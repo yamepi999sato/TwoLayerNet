@@ -27,9 +27,9 @@ time_start = time.time()
 # K-maximizing (step1)
 for i in range(params.ITER_NUM_K):
     weight, K, E, n_1, n_avg, p = neural_network.update(weight, step=1, randomwalk=False)
-    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
+    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t p={p}")
     iterData_K.append((i, K, E, n_1, n_avg, p))
-    print(p)
+    #print(p)
     #nlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
 
 # E-minimizing (step2)
@@ -38,7 +38,7 @@ for w in weight.values():
 
 for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
     weight, K, E, n_1, n_avg, p = neural_network.update(weight, step=2, randomwalk=False)
-    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f}")
+    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t p={p}")
     iterData_E.append((i, K, E, n_1, n_avg, p))
 #nlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
 
@@ -52,6 +52,8 @@ fig.suptitle(
 is_K, Ks_K, Hs_K, ns_K, n_avg_K, ps_K = zip(*iterData_K)
 is_E, Ks_E, Hs_E, ns_E, n_avg_E, ps_E = zip(*iterData_E)
 
+print(np.array(ps_K))
+
 """
 # サイト1の粒子数
 ax2 = fig.add_subplot(221)
@@ -63,13 +65,13 @@ ax2.set_ylabel("n_1")
 ax2.legend()
 ax2.grid(True)
 """
-# サイト1の粒子数
+# サンプリング時の確率
 ax2 = fig.add_subplot(221)
 ax2.plot(is_K, (np.array(ps_K) ), label="step1 (K-maximizing)")
 ax2.plot(is_E, (np.array(ps_E) ), label="step2 (E-minimizing)")
 ax2.set_title("psi(nlist)**2 of metropolis sampling")
 ax2.set_xlabel("iter")
-ax2.set_ylabel("psi**2")
+#ax2.set_ylim(-1, 5)
 ax2.set_yscale("log")
 ax2.legend()
 ax2.grid(True)

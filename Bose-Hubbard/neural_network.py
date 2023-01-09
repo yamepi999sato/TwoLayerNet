@@ -69,7 +69,7 @@ def metropolis(calc_p, randomwalk, sample_n = params.SAMPLE_N, M = params.M):
             n_vec, p = new_n_vec, new_p
         nlist[:, idn] = n_vec.ravel()
         idn += 1
-    print(p)
+    #print(p)
     return nlist, p
 """
 weight = initialize_weight(optimizer.Adam)
@@ -184,14 +184,15 @@ def update(weight, step, randomwalk):
             return 2 * (OwH_avg - Ow_avg * E)
         
     for key, w in weight.items():
-        if key=="b2":
-            w.update_rough(psi)
-        elif key=="b1" and isinstance(w, optimizer.Optimizer):
+        
+        if key=="b1" and isinstance(w, optimizer.Optimizer):
             w.update_weight(update_func_b1)
         elif key=="w2" and isinstance(w, optimizer.Optimizer):
             w.update_weight(update_func_w2)
         elif key=="w1" and isinstance(w, optimizer.Optimizer):
             w.update_weight(update_func_w1)
+        elif key=="b2":
+            w.update_rough(psi)
         else:
             assert False
     return weight, K, E, n_1, n_avg, p
