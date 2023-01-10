@@ -13,22 +13,22 @@ GRID    : 相図の刻み幅
 """
 
 # constants
-M = 3
+M = 1
 N_P = 5
 ETA = 0.1
 ITER_MAX = 10000
 EPS = 1e-6
-J_MAX  = 0.15
-MU_MAX = 1
-GRID = 50
+J_MAX  = 0.08
+MU_MAX = 0.5
+GRID = 10
 N_SEQ = np.array(range(N_P))
 N_SQRT = np.sqrt(N_SEQ)
 
 HIDDEN_N = 40
 SAMPLE_N = 1000
 DX = 1e-3
-ITER_NUM_K = 250
-ITER_NUM_E = 250
+ITER_NUM_K = 60
+ITER_NUM_E = 60
 MAX_X = 5.0
 
 

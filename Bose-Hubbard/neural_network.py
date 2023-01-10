@@ -81,7 +81,7 @@ print(p.shape)
 if np.all(p > 1e-10):
     print("OK")
 """
-def update(weight, step, randomwalk):
+def update(mu, J, weight, step, randomwalk):
     nlist, p = metropolis(lambda nlist:calc_psi(weight, nlist).ravel() **2, randomwalk=False)
     psi = calc_psi(weight, nlist)
     
@@ -98,15 +98,23 @@ def update(weight, step, randomwalk):
         else:
             return 0
         
+    def ilist(i):
+        if (0 <= i < params.M):
+            a = np.zeros((params.M, params.SAMPLE_N))
+            a[i] = 1
+            return a
+        else:
+            return 0
+        
     
     """エネルギー期待値Eを計算"""
     H_vec = np.zeros(params.SAMPLE_N)
     for i in range(params.M):
-        J_term = -params.J * (M(nlist[i], nlist[(i+1)%params.M]) * calc_psi(weight, nlist + tlist(i, (i+1)%params.M)) / psi + M(nlist[(i+1)%params.M], nlist[i]) * calc_psi(weight, nlist + tlist((i+1)%params.M, i)) / psi)
+        J_term = -J * (M(nlist[i], nlist[(i+1)%params.M]) * calc_psi(weight, nlist + tlist(i, (i+1)%params.M)) / psi + M(nlist[(i+1)%params.M], nlist[i]) * calc_psi(weight, nlist + tlist((i+1)%params.M, i)) / psi)
         J_term = J_term.ravel()
         U_term = params.U/2 * nlist[i] * (nlist[i] -1)
-        MU_term = - params.MU * nlist[i]
-        H_vec += J_term + U_term + MU_term
+        mu_term = - mu * nlist[i]
+        H_vec += J_term + U_term + mu_term
         #print("H_vec: " + str(H_vec.shape))
     E = np.average(H_vec)
 
@@ -123,6 +131,15 @@ def update(weight, step, randomwalk):
     
     "1サイトあたりの平均の粒子数"
     n_avg = np.average(nlist)
+    
+    
+    "生成演算子a_iの和の期待値beta"
+    beta_list = np.zeros(params.SAMPLE_N)
+    for i in range(params.M):
+        #print("nlist[i]: " + str(nlist[i].shape))
+        #print("calc_psi(weight, nlist + ilist(i)): " + str(calc_psi(weight, nlist + ilist(i)).ravel().shape))
+        beta_list += nlist[i] * calc_psi(weight, nlist + ilist(i)).ravel() / calc_psi(weight, nlist).ravel()
+    beta = np.average(beta_list)
     
     
     "Owの計算(活性化関数はtanhとexp)"
@@ -195,7 +212,7 @@ def update(weight, step, randomwalk):
             w.update_rough(psi)
         else:
             assert False
-    return weight, K, E, n_1, n_avg, p
+    return weight, K, E, beta, n_1, n_avg, p
 
 
 

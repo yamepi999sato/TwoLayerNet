@@ -24,11 +24,15 @@ iterData_K, iterData_E = [], []
 weight = neural_network.initialize_weight(optimizer.Adam)
 time_start = time.time()
 
+
+mu = params.MU
+J = params.J
+
 # K-maximizing (step1)
 for i in range(params.ITER_NUM_K):
-    weight, K, E, n_1, n_avg, p = neural_network.update(weight, step=1, randomwalk=False)
+    weight, K, E, beta, n_1, n_avg, p = neural_network.update(mu, J, weight, step=1, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t p={p}")
-    iterData_K.append((i, K, E, n_1, n_avg, p))
+    iterData_K.append((i, K, E, beta, n_1, n_avg, p))
     #print(p)
     #nlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
 
@@ -37,9 +41,9 @@ for w in weight.values():
     w.reset_internal_params()
 
 for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
-    weight, K, E, n_1, n_avg, p = neural_network.update(weight, step=2, randomwalk=False)
+    weight, K, E, beta, n_1, n_avg, p = neural_network.update(mu, J, weight, step=2, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t p={p}")
-    iterData_E.append((i, K, E, n_1, n_avg, p))
+    iterData_E.append((i, K, E, beta, n_1, n_avg, p))
 #nlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
 
 
@@ -49,8 +53,8 @@ fig.suptitle(
     f"Optimizer:{weight['w1'].__class__.__name__}, "
     f"ElapsedTime:{time.time()-time_start:.2f}s, "
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
-is_K, Ks_K, Hs_K, ns_K, n_avg_K, ps_K = zip(*iterData_K)
-is_E, Ks_E, Hs_E, ns_E, n_avg_E, ps_E = zip(*iterData_E)
+is_K, Ks_K, Hs_K, beta_K, ns_K, n_avg_K, ps_K = zip(*iterData_K)
+is_E, Ks_E, Hs_E, beta_E, ns_E, n_avg_E, ps_E = zip(*iterData_E)
 
 print(np.array(ps_K))
 
