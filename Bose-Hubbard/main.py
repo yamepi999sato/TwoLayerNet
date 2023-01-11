@@ -47,16 +47,16 @@ for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
 #nlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
 
 
-fig = plt.figure(figsize=(15, 5))
+fig = plt.figure(figsize=(20, 8))
 fig.suptitle(
     params.paramter_strings + ", "
-    f"Optimizer:{weight['w1'].__class__.__name__}, "
+    f"Optimizer:{weight['w1'].__class__.__name__}, \n"
     f"ElapsedTime:{time.time()-time_start:.2f}s, "
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
 is_K, Ks_K, Hs_K, beta_K, ns_K, n_avg_K, ps_K, b2s_K = zip(*iterData_K)
 is_E, Ks_E, Hs_E, beta_E, ns_E, n_avg_E, ps_E, b2s_E = zip(*iterData_E)
 
-print(np.array(ps_K))
+#print(np.array(ps_K))
 
 """
 # サイト1の粒子数
@@ -71,7 +71,7 @@ ax2.grid(True)
 """
 
 """
-# 規格化用の重みw2
+# 規格化用の重みb2
 ax2 = fig.add_subplot(223)
 ax2.plot(is_K, (np.array(b2s_K) ), label="step1 (K-maximizing)")
 ax2.plot(is_E, (np.array(b2s_E) ), label="step2 (E-minimizing)")
@@ -90,7 +90,7 @@ ax2.plot(is_E, (np.array(ps_E) ), label="step2 (E-minimizing)")
 ax2.set_title("psi(nlist)**2 of metropolis sampling")
 ax2.set_xlabel("iter")
 #ax2.set_ylim(-1, 5)
-ax2.set_yscale("log")
+#ax2.set_yscale("log")
 ax2.legend()
 ax2.grid(True)
 

@@ -27,22 +27,23 @@ N_SQRT = np.sqrt(N_SEQ)
 HIDDEN_N = 40
 SAMPLE_N = 1000
 DX = 1e-3
-ITER_NUM_K = 250
-ITER_NUM_E = 250
+ITER_NUM_K = 150
+ITER_NUM_E = 350
 MAX_X = 5.0
 
 
-J = 0.1
+J = 0.05
 MU = 0.5
 U = 1
 
 paramter_strings = (
+    f"site number M:{M}, "
+    f"J:{J}, "
+    f"mu:{MU}, "
     f"HiddenN:{HIDDEN_N}, " 
     f"SampleN:{SAMPLE_N}, "
-    f"Eta:{ETA}, "
+    f"leraning rate Eta:{ETA}, "
     f"IterNumK:{ITER_NUM_K}, "
-    f"IterNumE:{ITER_NUM_E}, "
-    f"J:{J}, "
-    f"mu:{MU}"
+    f"IterNumE:{ITER_NUM_E}"
 )
 
