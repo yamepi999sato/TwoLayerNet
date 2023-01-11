@@ -30,9 +30,9 @@ J = params.J
 
 # K-maximizing (step1)
 for i in range(params.ITER_NUM_K):
-    weight, K, E, beta, n_1, n_avg, p = neural_network.update(mu, J, weight, step=1, randomwalk=False)
+    weight, K, E, beta, n_1, n_avg, p, b2 = neural_network.update(mu, J, weight, step=1, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t p={p}")
-    iterData_K.append((i, K, E, beta, n_1, n_avg, p))
+    iterData_K.append((i, K, E, beta, n_1, n_avg, p, b2))
     #print(p)
     #nlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
 
@@ -41,9 +41,9 @@ for w in weight.values():
     w.reset_internal_params()
 
 for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
-    weight, K, E, beta, n_1, n_avg, p = neural_network.update(mu, J, weight, step=2, randomwalk=False)
+    weight, K, E, beta, n_1, n_avg, p, b2 = neural_network.update(mu, J, weight, step=2, randomwalk=False)
     print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t p={p}")
-    iterData_E.append((i, K, E, beta, n_1, n_avg, p))
+    iterData_E.append((i, K, E, beta, n_1, n_avg, p, b2))
 #nlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
 
 
@@ -53,8 +53,8 @@ fig.suptitle(
     f"Optimizer:{weight['w1'].__class__.__name__}, "
     f"ElapsedTime:{time.time()-time_start:.2f}s, "
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
-is_K, Ks_K, Hs_K, beta_K, ns_K, n_avg_K, ps_K = zip(*iterData_K)
-is_E, Ks_E, Hs_E, beta_E, ns_E, n_avg_E, ps_E = zip(*iterData_E)
+is_K, Ks_K, Hs_K, beta_K, ns_K, n_avg_K, ps_K, b2s_K = zip(*iterData_K)
+is_E, Ks_E, Hs_E, beta_E, ns_E, n_avg_E, ps_E, b2s_E = zip(*iterData_E)
 
 print(np.array(ps_K))
 
@@ -70,6 +70,19 @@ ax2.legend()
 ax2.grid(True)
 """
 
+"""
+# 規格化用の重みw2
+ax2 = fig.add_subplot(223)
+ax2.plot(is_K, (np.array(b2s_K) ), label="step1 (K-maximizing)")
+ax2.plot(is_E, (np.array(b2s_E) ), label="step2 (E-minimizing)")
+ax2.set_title("b2")
+ax2.set_xlabel("iter")
+#ax2.set_ylim(-1, 5)
+#ax2.set_yscale("log")
+ax2.legend()
+ax2.grid(True)
+"""
+
 # サンプリング時の確率
 ax2 = fig.add_subplot(221)
 ax2.plot(is_K, (np.array(ps_K) ), label="step1 (K-maximizing)")
@@ -81,6 +94,8 @@ ax2.set_yscale("log")
 ax2.legend()
 ax2.grid(True)
 
+
+"""
 # サンプリング時の確率
 ax2 = fig.add_subplot(223)
 ax2.plot(is_K, (np.array(ps_K) ), label="step1 (K-maximizing)")
@@ -91,8 +106,8 @@ ax2.set_ylim(-1, 3)
 #ax2.set_yscale("log")
 ax2.legend()
 ax2.grid(True)
-
 """
+
 # 1サイトあたりの平均の粒子数
 ax2 = fig.add_subplot(223)
 ax2.plot(is_K, (np.array(n_avg_K) ), label="step1 (K-maximizing)")
@@ -102,7 +117,7 @@ ax2.set_xlabel("iter")
 ax2.set_ylabel("<n>")
 ax2.legend()
 ax2.grid(True)
-"""
+
 
 # 重なり積分(K)の収束確認(step2では厳密解と比較)
 ax2 = fig.add_subplot(222)

@@ -13,9 +13,9 @@ GRID    : 相図の刻み幅
 """
 
 # constants
-M = 1
+M = 3
 N_P = 5
-ETA = 0.1
+ETA = 0.01
 ITER_MAX = 10000
 EPS = 1e-6
 J_MAX  = 0.08
@@ -27,12 +27,12 @@ N_SQRT = np.sqrt(N_SEQ)
 HIDDEN_N = 40
 SAMPLE_N = 1000
 DX = 1e-3
-ITER_NUM_K = 60
-ITER_NUM_E = 60
+ITER_NUM_K = 250
+ITER_NUM_E = 250
 MAX_X = 5.0
 
 
-J = 0
+J = 0.1
 MU = 0.5
 U = 1
 
@@ -40,7 +40,9 @@ paramter_strings = (
     f"HiddenN:{HIDDEN_N}, " 
     f"SampleN:{SAMPLE_N}, "
     f"Eta:{ETA}, "
-    f"IterNumI:{ITER_NUM_K}, "
-    f"IterNumE:{ITER_NUM_E}"
+    f"IterNumK:{ITER_NUM_K}, "
+    f"IterNumE:{ITER_NUM_E}, "
+    f"J:{J}, "
+    f"mu:{MU}"
 )
 

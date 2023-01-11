@@ -10,10 +10,10 @@ import parameter as params
 
 class Normalizer:
     def __init__(self):
-        self.reset_internal_params()
+        self.value = 0
 
     def reset_internal_params(self):
-        self.value = 0
+        pass
     
     def update_rough(self, psi):
         self.value -= 0.5*np.log(np.average(psi.ravel() ** 2)) 
