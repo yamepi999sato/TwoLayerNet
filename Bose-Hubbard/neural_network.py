@@ -44,8 +44,10 @@ def calc_train_psi(nlist):
 
 def metropolis(calc_p, randomwalk, sample_n = params.SAMPLE_N, M = params.M):
     """メトロポリス法で|psi|^2を確率分布関数にしてサンプル生成"""
-    nlist = np.empty((M, sample_n), dtype=int)
-    n_vec = np.ones((M, 1))                                            #書き足した
+    #print("M: " + str(M))
+    #print("params.M: " + str(params.M))
+    nlist = np.empty((params.M, sample_n), dtype=int)
+    n_vec = np.ones((params.M, 1))                                            #書き足した
     p = calc_p(n_vec)
     #print("p: " + str(p.shape))
     #assert np.all(p > 1e-10)
@@ -128,7 +130,15 @@ def update(mu, J, weight, step, randomwalk):
     K = A1_avg**2 / A2_avg
     
     "サイト1の粒子数"
+    
     n_1 = np.average(nlist[0])
+    n_2 = np.average(nlist[1])
+    n_3 = np.average(nlist[2])
+    
+    nnn = np.zeros(params.M)
+    for i in range(params.M):
+        nnn[i] = np.average(nlist[i])
+    
     
     "1サイトあたりの平均の粒子数"
     n_avg = np.average(nlist)
@@ -213,7 +223,7 @@ def update(mu, J, weight, step, randomwalk):
             w.update_rough(psi)
         else:
             assert False
-    return weight, K, E, beta, n_1, n_avg, p, weight["b2"].value
+    return weight, K, E, beta, nnn, n_avg, p, weight["b2"].value
 
 
 

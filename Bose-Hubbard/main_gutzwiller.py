@@ -44,9 +44,10 @@ J = params.J
 
 # K-maximizing (step1)
 for i in range(params.ITER_NUM_K):
-    weight, K, E, beta, n_1, n_avg, p, b2 = neural_network.update(mu, J, weight, step=1, randomwalk=False)
-    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t beta={beta:.4f}")
-    iterData_K.append((i, K, E, beta, n_1, n_avg, p, b2))
+    weight, K, E, beta, nnn, n_avg, p, b2 = neural_network.update(mu, J, weight, step=1, randomwalk=False)
+    if i%100==0:
+        print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t beta={beta:.4f}")
+    iterData_K.append((i, K, E, beta, nnn, n_avg, p, b2))
     #print(p)
     #nlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
 
@@ -55,22 +56,24 @@ for w in weight.values():
     w.reset_internal_params()
 
 for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
-    weight, K, E, beta, n_1, n_avg, p, b2 = neural_network.update(mu, J, weight, step=2, randomwalk=False)
-    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t beta={beta:.4f}")
-    iterData_E.append((i, K, E, beta, n_1, n_avg, p, b2))
-is_K, Ks_K, Hs_K, beta_K, ns_K, n_avg_K, ps_K, b2s_K = zip(*iterData_K)
-is_E, Ks_E, Hs_E, beta_E, ns_E, n_avg_E, ps_E, b2s_E = zip(*iterData_E)
+    weight, K, E, beta, nnn, n_avg, p, b2 = neural_network.update(mu, J, weight, step=2, randomwalk=False)
+    if i%100==0:
+        print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t beta={beta:.4f}")
+    iterData_E.append((i, K, E, beta, nnn, n_avg, p, b2))
+is_K, Ks_K, Hs_K, beta_K, nnn_K, n_avg_K, ps_K, b2s_K = zip(*iterData_K)
+is_E, Ks_E, Hs_E, beta_E, nnn_E, n_avg_E, ps_E, b2s_E = zip(*iterData_E)
 
 
 fig = plt.figure(figsize=(20, 8))
-"""
+
 fig.suptitle(
+    "Gutwiller vs neural network\n" +  
     params.paramter_strings + ", "
     f"Optimizer:{weight['w1'].__class__.__name__}, \n"
     f"ElapsedTime:{time.time()-time_start:.2f}s, "
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
-"""
-fig.suptitle("Gutwiller vs neural network")
+
+#fig.suptitle("Gutwiller vs neural network")
 
 #print(np.arange(params.ITER_NUM_K + params.ITER_NUM_E))
 #print(data["E"])
@@ -79,8 +82,8 @@ fig.suptitle("Gutwiller vs neural network")
 
 # エネルギー(E)の収束確認
 ax3 = fig.add_subplot(111)
-ax3.plot(is_K, (np.array(Hs_K) ), label="step1 (K-maximizing)")
-ax3.plot(is_E, (np.array(Hs_E) ), label="step2 (E-minimizing)")
+ax3.plot(is_K, (np.array(Hs_K)/params.M ), label="step1 (K-maximizing)")
+ax3.plot(is_E, (np.array(Hs_E)/params.M ), label="step2 (E-minimizing)")
 ax3.plot(np.arange(params.ITER_NUM_K + params.ITER_NUM_E), (data["E"] * np.ones(params.ITER_NUM_K + params.ITER_NUM_E)), label="Gutzwiller")
 ax3.set_title("E (energy expectation value)")
 ax3.set_xlabel("iter")

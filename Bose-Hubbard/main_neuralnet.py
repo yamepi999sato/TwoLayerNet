@@ -30,9 +30,10 @@ J = params.J
 
 # K-maximizing (step1)
 for i in range(params.ITER_NUM_K):
-    weight, K, E, beta, n_1, n_avg, p, b2 = neural_network.update(mu, J, weight, step=1, randomwalk=False)
-    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t beta={beta:.4f}")
-    iterData_K.append((i, K, E, beta, n_1, n_avg, p, b2))
+    weight, K, E, beta, nnn, n_avg, p, b2 = neural_network.update(mu, J, weight, step=1, randomwalk=False)
+    if i%100==0:
+        print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t <n>={n_avg:.4f}")
+    iterData_K.append((i, K, E, beta, nnn, n_avg, p, b2))
     #print(p)
     #nlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
 
@@ -41,9 +42,10 @@ for w in weight.values():
     w.reset_internal_params()
 
 for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
-    weight, K, E, beta, n_1, n_avg, p, b2 = neural_network.update(mu, J, weight, step=2, randomwalk=False)
-    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t beta={beta:.4f}")
-    iterData_E.append((i, K, E, beta, n_1, n_avg, p, b2))
+    weight, K, E, beta, nnn, n_avg, p, b2= neural_network.update(mu, J, weight, step=2, randomwalk=False)
+    if i%100==0:
+        print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t <n>={n_avg:.4f}")
+    iterData_E.append((i, K, E, beta, nnn, n_avg, p, b2))
 #nlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
 
 
@@ -53,16 +55,45 @@ fig.suptitle(
     f"Optimizer:{weight['w1'].__class__.__name__}, \n"
     f"ElapsedTime:{time.time()-time_start:.2f}s, "
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
-is_K, Ks_K, Hs_K, beta_K, ns_K, n_avg_K, ps_K, b2s_K = zip(*iterData_K)
-is_E, Ks_E, Hs_E, beta_E, ns_E, n_avg_E, ps_E, b2s_E = zip(*iterData_E)
+is_K, Ks_K, Hs_K, beta_K, nnn_K, n_avg_K, ps_K, b2s_K = zip(*iterData_K)
+is_E, Ks_E, Hs_E, beta_E, nnn_E, n_avg_E, ps_E, b2s_E = zip(*iterData_E)
+
+
+print(nnn)
+ax2 = fig.add_subplot(221)
+ax2.plot(np.arange(params.M), nnn, label="<n>")
+ax2.set_title("<n>")
+ax2.set_xlabel("site")
+ax2.set_ylabel("<n>")
+ax2.legend()
+ax2.grid(True)
+
+#print(n1s_E)
+#print(n1s_E[-1])
+"""
+ns_array = np.zeros(3)
+ns_array[0] = n1s_E[-1]
+ns_array[1] = n2s_E[-1]
+ns_array[2] = n3s_E[-1]
+
+
+ax2 = fig.add_subplot(221)
+ax2.plot(np.arange(params.M), ns_array, label="<n>")
+ax2.set_title("<n>")
+ax2.set_xlabel("site")
+ax2.set_ylabel("<n>")
+ax2.legend()
+ax2.grid(True)
+"""
 
 #print(np.array(ps_K))
+
 
 """
 # サイト1の粒子数
 ax2 = fig.add_subplot(221)
-ax2.plot(is_K, (np.array(ns_K) ), label="step1 (K-maximizing)")
-ax2.plot(is_E, (np.array(ns_E) ), label="step2 (E-minimizing)")
+ax2.plot(is_K, (np.array(n1s_K) ), label="step1 (K-maximizing)")
+ax2.plot(is_E, (np.array(n1s_E) ), label="step2 (E-minimizing)")
 ax2.set_title("n_1 (number of particles on site1)")
 ax2.set_xlabel("iter")
 ax2.set_ylabel("n_1")
@@ -95,6 +126,29 @@ ax2.legend()
 ax2.grid(True)
 """
 
+"Ψ"
+"""
+nlist = np.zeros((params.M, params.N_P+1))
+for n in range(params.N_P+1):
+    nlist[0,n] = n
+for i in range(1, params.M):
+    nlist[i] = 1
+#print(nlist)
+
+
+print(neural_network.calc_psi(weight, nlist)[0])
+print(np.arange(params.N_P+1))
+
+ax2 = fig.add_subplot(221)
+ax2.plot(np.arange(params.N_P+1), neural_network.calc_psi(weight, nlist)[0], label="psi(n_1, 1, 1)")
+ax2.set_title("psi(n_1, n_2=1, n_3=1)")
+ax2.set_xlabel("n_1")
+ax2.set_ylabel("psi")
+ax2.legend()
+ax2.grid(True)
+
+
+
 # beta
 ax2 = fig.add_subplot(221)
 ax2.plot(is_K, (np.array(beta_K) ), label="step1 (K-maximizing)")
@@ -107,7 +161,7 @@ ax2.set_ylabel("beta")
 ax2.legend()
 ax2.grid(True)
 
-"""
+
 # サンプリング時の確率
 ax2 = fig.add_subplot(223)
 ax2.plot(is_K, (np.array(ps_K) ), label="step1 (K-maximizing)")
