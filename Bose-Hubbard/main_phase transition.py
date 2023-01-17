@@ -55,7 +55,7 @@ for yi in range(GRID):
 
 fig = plt.figure()
 fig.suptitle(
-    params.paramter_phase_strings + ", "
+    params.paramter_string_phase + ", "
     f"Optimizer:{weight['w1'].__class__.__name__}, \n"
     f"ElapsedTime:{time.time()-time_start:.2f}s, "
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
