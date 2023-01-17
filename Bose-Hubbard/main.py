@@ -31,7 +31,7 @@ J = params.J
 # K-maximizing (step1)
 for i in range(params.ITER_NUM_K):
     weight, K, E, beta, n_1, n_avg, p, b2 = neural_network.update(mu, J, weight, step=1, randomwalk=False)
-    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t p={p}")
+    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t beta={beta:.4f}")
     iterData_K.append((i, K, E, beta, n_1, n_avg, p, b2))
     #print(p)
     #nlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
@@ -42,7 +42,7 @@ for w in weight.values():
 
 for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
     weight, K, E, beta, n_1, n_avg, p, b2 = neural_network.update(mu, J, weight, step=2, randomwalk=False)
-    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t p={p}")
+    print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t beta={beta:.4f}")
     iterData_E.append((i, K, E, beta, n_1, n_avg, p, b2))
 #nlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
 
@@ -81,7 +81,7 @@ ax2.set_xlabel("iter")
 #ax2.set_yscale("log")
 ax2.legend()
 ax2.grid(True)
-"""
+
 
 # サンプリング時の確率
 ax2 = fig.add_subplot(221)
@@ -93,7 +93,19 @@ ax2.set_xlabel("iter")
 #ax2.set_yscale("log")
 ax2.legend()
 ax2.grid(True)
+"""
 
+# beta
+ax2 = fig.add_subplot(221)
+ax2.plot(is_K, (np.array(beta_K) ), label="step1 (K-maximizing)")
+ax2.plot(is_E, (np.array(beta_E) ), label="step2 (E-minimizing)")
+ax2.set_title("beta (annihilation operator expectation value)")
+ax2.set_xlabel("iter")
+ax2.set_ylabel("beta")
+#ax2.set_ylim(-1, 5)
+#ax2.set_yscale("log")
+ax2.legend()
+ax2.grid(True)
 
 """
 # サンプリング時の確率

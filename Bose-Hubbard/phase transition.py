@@ -26,6 +26,7 @@ data = None
 J_list = np.linspace(0.0, params.J_MAX, GRID)
 mu_list = np.linspace(0.0, params.MU_MAX, GRID)
 beta_list = np.empty([GRID,GRID])
+loop = 0
 for yi in range(GRID):
     data = None
     for xi in reversed(range(GRID)):
@@ -34,10 +35,8 @@ for yi in range(GRID):
             w.reset_internal_params()
             
         for i in range(params.ITER_NUM_K):
-            weight, K, E, beta, n_1, n_avg, p = neural_network.update(mu_list[yi], J_list[xi], weight, step=1, randomwalk=False)
-            if i%20 == 0:
-                print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t p={p}")
-            iterData_K.append((i, K, E, beta, n_1, n_avg, p))
+            weight, K, E, beta, n_1, n_avg, p, b2 = neural_network.update(mu_list[yi], J_list[xi], weight, step=1, randomwalk=False)
+            iterData_K.append((i, K, E, beta, n_1, n_avg, p, b2))
             #print(p)
             #nlist_K, psi2_K = neural_network.output_psi2(weight, L=5, N=100)
 
@@ -46,18 +45,27 @@ for yi in range(GRID):
             w.reset_internal_params()
 
         for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
-            weight, K, E, beta, n_1, n_avg, p = neural_network.update(mu_list[yi], J_list[xi], weight, step=2, randomwalk=False)
-            if i%20 == 0:
-                print(f"#step={i:04} \t K={K:.4f} \t H={E:.4f} \t p={p}")
-            iterData_E.append((i, K, E, beta, n_1, n_avg, p))
+            weight, K, E, beta, n_1, n_avg, p, b2 = neural_network.update(mu_list[yi], J_list[xi], weight, step=2, randomwalk=False)
+            iterData_E.append((i, K, E, beta, n_1, n_avg, p, b2))
             #nlist_E, psi2_E = neural_network.output_psi2(weight, L=params.MAX_X, N=100)
-            
-        print(beta)
-        beta_list[yi, xi] = beta
+        
+        beta_list[yi, xi] = n_avg
+        print(f"#loop={loop:04} \t mu={mu_list[yi]:.4f} \t J={J_list[xi]:.4f}\t <n>={n_avg:.4f} \t beta={beta: .4f}")
+        loop += 1
 
+fig = plt.figure()
+fig.suptitle(
+    params.paramter_phase_strings + ", "
+    f"Optimizer:{weight['w1'].__class__.__name__}, \n"
+    f"ElapsedTime:{time.time()-time_start:.2f}s, "
+    f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
 X, Y = np.meshgrid(J_list, mu_list)
-plt.pcolormesh(X, Y, beta_list)
+#print(X.shape)
+#print(Y.shape)
+#print(beta_list.shape)
+plt.pcolormesh(X, Y, beta_list, shading='auto')
 plt.colorbar()
+plt.title("<n> (average number of particles)")
 plt.xlabel('J/U')
 plt.ylabel('mu/U')
 plt.show()

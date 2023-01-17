@@ -139,8 +139,8 @@ def update(mu, J, weight, step, randomwalk):
     for i in range(params.M):
         #print("nlist[i]: " + str(nlist[i].shape))
         #print("calc_psi(weight, nlist + ilist(i)): " + str(calc_psi(weight, nlist + ilist(i)).ravel().shape))
-        beta_list += nlist[i] * calc_psi(weight, nlist + ilist(i)).ravel() / calc_psi(weight, nlist).ravel()
-    beta = np.average(beta_list)
+        beta_list += np.sqrt(nlist[i]) * calc_psi(weight, nlist + ilist(i)).ravel() / calc_psi(weight, nlist).ravel()
+    beta = np.average(beta_list / params.M)
     
     
     "Owの計算(活性化関数はtanhとexp)"
