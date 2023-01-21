@@ -59,101 +59,23 @@ is_K, Ks_K, Hs_K, beta_K, nnn_K, n_avg_K, ps_K, b2s_K = zip(*iterData_K)
 is_E, Ks_E, Hs_E, beta_E, nnn_E, n_avg_E, ps_E, b2s_E = zip(*iterData_E)
 
 
-print(nnn)
-ax2 = fig.add_subplot(221)
-ax2.plot(np.arange(params.M), nnn, label="<n>")
-ax2.set_title("<n>")
-ax2.set_xlabel("site")
-ax2.set_ylabel("<n>")
-ax2.legend()
-ax2.grid(True)
 
-#print(n1s_E)
-#print(n1s_E[-1])
-"""
-ns_array = np.zeros(3)
-ns_array[0] = n1s_E[-1]
-ns_array[1] = n2s_E[-1]
-ns_array[2] = n3s_E[-1]
-
-
-ax2 = fig.add_subplot(221)
-ax2.plot(np.arange(params.M), ns_array, label="<n>")
-ax2.set_title("<n>")
-ax2.set_xlabel("site")
-ax2.set_ylabel("<n>")
-ax2.legend()
-ax2.grid(True)
-"""
-
-#print(np.array(ps_K))
-
-
-"""
-# サイト1の粒子数
-ax2 = fig.add_subplot(221)
-ax2.plot(is_K, (np.array(n1s_K) ), label="step1 (K-maximizing)")
-ax2.plot(is_E, (np.array(n1s_E) ), label="step2 (E-minimizing)")
-ax2.set_title("n_1 (number of particles on site1)")
-ax2.set_xlabel("iter")
-ax2.set_ylabel("n_1")
-ax2.legend()
-ax2.grid(True)
-"""
-
-"""
-# 規格化用の重みb2
-ax2 = fig.add_subplot(223)
-ax2.plot(is_K, (np.array(b2s_K) ), label="step1 (K-maximizing)")
-ax2.plot(is_E, (np.array(b2s_E) ), label="step2 (E-minimizing)")
-ax2.set_title("b2")
-ax2.set_xlabel("iter")
-#ax2.set_ylim(-1, 5)
-#ax2.set_yscale("log")
-ax2.legend()
-ax2.grid(True)
-
-
-# サンプリング時の確率
-ax2 = fig.add_subplot(221)
-ax2.plot(is_K, (np.array(ps_K) ), label="step1 (K-maximizing)")
-ax2.plot(is_E, (np.array(ps_E) ), label="step2 (E-minimizing)")
-ax2.set_title("psi(nlist)**2 of metropolis sampling")
-ax2.set_xlabel("iter")
-#ax2.set_ylim(-1, 5)
-#ax2.set_yscale("log")
-ax2.legend()
-ax2.grid(True)
-"""
-
-"Ψ"
-"""
-nlist = np.zeros((params.M, params.N_P+1))
-for n in range(params.N_P+1):
-    nlist[0,n] = n
-for i in range(1, params.M):
-    nlist[i] = 1
-#print(nlist)
-
-
-print(neural_network.calc_psi(weight, nlist)[0])
-print(np.arange(params.N_P+1))
-
-ax2 = fig.add_subplot(221)
-ax2.plot(np.arange(params.N_P+1), neural_network.calc_psi(weight, nlist)[0], label="psi(n_1, 1, 1)")
-ax2.set_title("psi(n_1, n_2=1, n_3=1)")
-ax2.set_xlabel("n_1")
-ax2.set_ylabel("psi")
-ax2.legend()
-ax2.grid(True)
-
-
+# 各サイトの粒子数n_i
+ax1 = fig.add_subplot(221)
+ax1.plot(np.arange(1, params.M+1), nnn, label="<n>")
+ax1.set_title("<n>")
+ax1.set_xlabel("site")
+ax1.set_ylabel("<n>")
+ax1.set_xticks([1, 2, 3])
+ax1.set_ylim(0, 2.5)
+ax1.legend()
+ax1.grid(True)
 
 # beta
-ax2 = fig.add_subplot(221)
-ax2.plot(is_K, (np.array(beta_K) ), label="step1 (K-maximizing)")
-ax2.plot(is_E, (np.array(beta_E) ), label="step2 (E-minimizing)")
-ax2.set_title("beta (annihilation operator expectation value)")
+ax2 = fig.add_subplot(223)
+ax2.plot(is_K, np.array(beta_K), label="step1 (K-maximizing)")
+ax2.plot(is_E, np.array(beta_E), label="step2 (E-minimizing)")
+ax2.set_title("beta (expectation value of annihilation operator)")
 ax2.set_xlabel("iter")
 ax2.set_ylabel("beta")
 #ax2.set_ylim(-1, 5)
@@ -161,6 +83,36 @@ ax2.set_ylabel("beta")
 ax2.legend()
 ax2.grid(True)
 
+# 重なり積分(K)の収束確認(step2では厳密解と比較)
+ax4 = fig.add_subplot(222)
+ax4.plot(is_K, np.array(Ks_K), label="step1 (K-maximizing)")
+ax4.plot(is_E, np.array(Ks_E), label="step2 (E-minimizing)")
+ax4.set_title("K (overlap integral)")
+ax4.set_xlabel("iter")
+ax4.set_ylabel("K")
+ax4.legend()
+ax4.grid(True)
+
+# エネルギー(E)の収束確認
+ax3 = fig.add_subplot(224)
+ax3.plot(is_K, np.array(Hs_K), label="step1 (K-maximizing)")
+ax3.plot(is_E, np.array(Hs_E), label="step2 (E-minimizing)")
+ax3.set_title("E (energy)")
+ax3.set_xlabel("iter")
+ax3.set_ylabel("E")
+ax3.legend()
+ax3.grid(True)
+
+"""
+# 1サイトあたりの平均の粒子数
+ax2 = fig.add_subplot(223)
+ax2.plot(is_K, (np.array(n_avg_K) ), label="step1 (K-maximizing)")
+ax2.plot(is_E, (np.array(n_avg_E) ), label="step2 (E-minimizing)")
+ax2.set_title("<n> (average number of particles)")
+ax2.set_xlabel("iter")
+ax2.set_ylabel("<n>")
+ax2.legend()
+ax2.grid(True)
 
 # サンプリング時の確率
 ax2 = fig.add_subplot(223)
@@ -174,78 +126,6 @@ ax2.legend()
 ax2.grid(True)
 """
 
-# 1サイトあたりの平均の粒子数
-ax2 = fig.add_subplot(223)
-ax2.plot(is_K, (np.array(n_avg_K) ), label="step1 (K-maximizing)")
-ax2.plot(is_E, (np.array(n_avg_E) ), label="step2 (E-minimizing)")
-ax2.set_title("<n> (average number of particles)")
-ax2.set_xlabel("iter")
-ax2.set_ylabel("<n>")
-ax2.legend()
-ax2.grid(True)
-
-
-# 重なり積分(K)の収束確認(step2では厳密解と比較)
-ax2 = fig.add_subplot(222)
-ax2.plot(is_K, (np.array(Ks_K) ), label="step1 (K-maximizing)")
-ax2.plot(is_E, (np.array(Ks_E) ), label="step2 (E-minimizing)")
-ax2.set_title("K (overlap integral)")
-ax2.set_xlabel("iter")
-ax2.set_ylabel("K")
-#ax2.set_yscale("log")
-ax2.legend()
-ax2.grid(True)
-
-# エネルギー(E)の収束確認
-ax3 = fig.add_subplot(224)
-ax3.plot(is_K, (np.array(Hs_K) ), label="step1 (K-maximizing)")
-ax3.plot(is_E, (np.array(Hs_E) ), label="step2 (E-minimizing)")
-ax3.set_title("E (energy expectation value)")
-ax3.set_xlabel("iter")
-ax3.set_ylabel("E")
-#ax3.set_yscale("log")
-ax3.legend()
-ax3.grid(True)
-
 plt.subplots_adjust(hspace=0.5)
 plt.show()
 
-
-"""
-# グラフ化
-fig = plt.figure(figsize=(15, 5))
-fig.suptitle(
-    params.paramter_strings + ", "
-    f"Optimizer:{weight['w1'].__class__.__name__}, "
-    f"ElapsedTime:{time.time()-time_start:.2f}s, "
-    f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
-psi2_Ex = neural_network.calc_exact_psi(nlist_E) ** 2
-psi2_T = neural_network.calc_train_psi(nlist_E) ** 2
-is_K, Ks_K, Hs_K = zip(*iterData_K)
-is_E, Ks_E, Hs_E = zip(*iterData_E)
-
-# 重なり積分(K)の収束確認(step2では厳密解と比較)
-ax2 = fig.add_subplot(222)
-ax2.plot(is_K, np.abs(np.array(Ks_K) - 1), label="step1 (K-maximizing)")
-ax2.plot(is_E, np.abs(np.array(Ks_E) - 1), label="step2 (E-minimizing)")
-ax2.set_title("Error of K (overlap integral)")
-ax2.set_xlabel("iter")
-ax2.set_ylabel("|K-1|")
-ax2.set_yscale("log")
-ax2.legend()
-ax2.grid(True)
-
-# エネルギー(E)の収束確認
-ax3 = fig.add_subplot(224)
-ax3.plot(is_K, np.abs(np.array(Hs_K) - 1), label="step1 (K-maximizing)")
-ax3.plot(is_E, np.abs(np.array(Hs_E) - 1), label="step2 (E-minimizing)")
-ax3.set_title("Error of H (energy expectation value)")
-ax3.set_xlabel("iter")
-ax3.set_ylabel("|E-1|")
-ax3.set_yscale("log")
-ax3.legend()
-ax3.grid(True)
-
-plt.subplots_adjust(hspace=0.5)
-plt.show()
-"""

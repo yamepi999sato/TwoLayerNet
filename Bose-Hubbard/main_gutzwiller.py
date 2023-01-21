@@ -7,6 +7,7 @@ import time
 import datetime
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import parameter as params
 import gutzwiller as gw
 import main_neuralnet as main_n
@@ -34,13 +35,13 @@ for yi in range(GRID):
 
 
 
-iterData_K, iterData_E = [], []
-weight = neural_network.initialize_weight(optimizer.Adam)
 
 
-# ニューラルネットワークで計算
+"""ニューラルネットワークで計算"""
 mu = params.MU
 J = params.J
+iterData_K, iterData_E = [], []
+weight = neural_network.initialize_weight(optimizer.Adam)
 
 # K-maximizing (step1)
 for i in range(params.ITER_NUM_K):
@@ -64,7 +65,9 @@ is_K, Ks_K, Hs_K, beta_K, nnn_K, n_avg_K, ps_K, b2s_K = zip(*iterData_K)
 is_E, Ks_E, Hs_E, beta_E, nnn_E, n_avg_E, ps_E, b2s_E = zip(*iterData_E)
 
 
-fig = plt.figure(figsize=(20, 8))
+
+"""グラフ化"""
+fig = plt.figure(figsize=(20, 7))
 
 fig.suptitle(
     "Gutwiller vs neural network\n" +  
@@ -73,15 +76,41 @@ fig.suptitle(
     f"ElapsedTime:{time.time()-time_start:.2f}s, "
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
 
-#fig.suptitle("Gutwiller vs neural network")
+# 各サイトの粒子数n_i
+ax1 = fig.add_subplot(221)
+ax1.plot(np.arange(1, params.M+1), nnn, label="<n>")
+ax1.set_title("<n>")
+ax1.set_xlabel("site")
+ax1.set_ylabel("<n>")
+ax1.set_xticks([1, 2, 3])
+ax1.set_ylim(0, 2.5)
+ax1.legend()
+ax1.grid(True)
 
-#print(np.arange(params.ITER_NUM_K + params.ITER_NUM_E))
-#print(data["E"])
-#print(data["E"] * np.ones(params.ITER_NUM_K + params.ITER_NUM_E))
+# beta
+ax2 = fig.add_subplot(223)
+ax2.plot(is_K, np.array(beta_K), label="step1 (K-maximizing)")
+ax2.plot(is_E, np.array(beta_E), label="step2 (E-minimizing)")
+ax2.set_title("beta (expectation value of annihilation operator)")
+ax2.set_xlabel("iter")
+ax2.set_ylabel("beta")
+#ax2.set_ylim(-1, 5)
+#ax2.set_yscale("log")
+ax2.legend()
+ax2.grid(True)
 
+# 重なり積分(K)の収束確認(step2では厳密解と比較)
+ax4 = fig.add_subplot(222)
+ax4.plot(is_K, np.array(Ks_K), label="step1 (K-maximizing)")
+ax4.plot(is_E, np.array(Ks_E), label="step2 (E-minimizing)")
+ax4.set_title("K (overlap integral)")
+ax4.set_xlabel("iter")
+ax4.set_ylabel("K")
+ax4.legend()
+ax4.grid(True)
 
 # エネルギー(E)の収束確認
-ax3 = fig.add_subplot(111)
+ax3 = fig.add_subplot(224)
 ax3.plot(is_K, (np.array(Hs_K)/params.M ), label="step1 (K-maximizing)")
 ax3.plot(is_E, (np.array(Hs_E)/params.M ), label="step2 (E-minimizing)")
 ax3.plot(np.arange(params.ITER_NUM_K + params.ITER_NUM_E), (data["E"] * np.ones(params.ITER_NUM_K + params.ITER_NUM_E)), label="Gutzwiller")

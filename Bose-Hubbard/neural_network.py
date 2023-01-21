@@ -28,12 +28,7 @@ def initialize_weight(opt_class):
 def calc_psi(weight, nlist):
     """ネットワークを使ってpsiを計算"""
     fu1 = np.tanh(np.dot(weight["w1"].w, nlist) + weight["b1"].w)
-    #print("w1: " + str(weight["w1"].w.shape))
-    #print("nlist: " + str(nlist.shape))
-    #print(fu1.shape)
     u2 = np.dot(weight["w2"].w, fu1)
-    #print("w2: " + str(weight["w2"].w.shape))
-    #print("u2: " + str(u2.shape))
     return np.exp(u2 + weight["b2"].value)
 
 
@@ -44,13 +39,9 @@ def calc_train_psi(nlist):
 
 def metropolis(calc_p, randomwalk, sample_n = params.SAMPLE_N, M = params.M):
     """メトロポリス法で|psi|^2を確率分布関数にしてサンプル生成"""
-    #print("M: " + str(M))
-    #print("params.M: " + str(params.M))
     nlist = np.empty((params.M, sample_n), dtype=int)
-    n_vec = np.ones((params.M, 1))                                            #書き足した
+    n_vec = np.ones((params.M, 1))
     p = calc_p(n_vec)
-    #print("p: " + str(p.shape))
-    #assert np.all(p > 1e-10)
     assert np.all(p != np.inf)
     idn = 0
     while idn < sample_n:
@@ -74,16 +65,8 @@ def metropolis(calc_p, randomwalk, sample_n = params.SAMPLE_N, M = params.M):
         idn += 1
     #print(p)
     return nlist, p
-"""
-weight = initialize_weight(optimizer.Adam)
-#nlist = rng.normal(size=(params.M, params.SAMPLE_N))
-n_vec = np.zeros((params.M, 1)) 
-p = calc_psi(weight, n_vec)
-print(p)
-print(p.shape)
-if np.all(p > 1e-10):
-    print("OK")
-"""
+
+
 def update(mu, J, weight, step, randomwalk):
     nlist, p = metropolis(lambda nlist:calc_psi(weight, nlist).ravel() **2, randomwalk=False)
     psi = calc_psi(weight, nlist)
@@ -113,12 +96,14 @@ def update(mu, J, weight, step, randomwalk):
     """エネルギー期待値Eを計算"""
     H_vec = np.zeros(params.SAMPLE_N)
     for i in range(params.M):
-        J_term = -J * (M(nlist[i], nlist[(i+1)%params.M]) * calc_psi(weight, nlist + tlist(i, (i+1)%params.M)) / psi + M(nlist[(i+1)%params.M], nlist[i]) * calc_psi(weight, nlist + tlist((i+1)%params.M, i)) / psi)
+        J_term = -J * (
+            M(nlist[i], nlist[(i+1)%params.M]) * calc_psi(weight, nlist + tlist(i, (i+1)%params.M)) / psi 
+            + M(nlist[(i+1)%params.M], nlist[i]) * calc_psi(weight, nlist + tlist((i+1)%params.M, i)) / psi
+            )
         J_term = J_term.ravel()
         U_term = params.U/2 * nlist[i] * (nlist[i] -1)
         mu_term = - mu * nlist[i]
         H_vec += J_term + U_term + mu_term
-        #print("H_vec: " + str(H_vec.shape))
     E = np.average(H_vec)
 
     
@@ -129,12 +114,8 @@ def update(mu, J, weight, step, randomwalk):
     A2_avg = np.average(A1**2)
     K = A1_avg**2 / A2_avg
     
-    "サイト1の粒子数"
-    
-    n_1 = np.average(nlist[0])
-    n_2 = np.average(nlist[1])
-    n_3 = np.average(nlist[2])
-    
+
+    "各サイトのる湯指数n_i"
     nnn = np.zeros(params.M)
     for i in range(params.M):
         nnn[i] = np.average(nlist[i])
@@ -149,7 +130,7 @@ def update(mu, J, weight, step, randomwalk):
     for i in range(params.M):
         #print("nlist[i]: " + str(nlist[i].shape))
         #print("calc_psi(weight, nlist + ilist(i)): " + str(calc_psi(weight, nlist + ilist(i)).ravel().shape))
-        beta_list += np.sqrt(nlist[i]) * calc_psi(weight, nlist + ilist(i)).ravel() / calc_psi(weight, nlist).ravel()
+        beta_list += np.sqrt(nlist[i]+1) * calc_psi(weight, nlist + ilist(i)).ravel() / calc_psi(weight, nlist).ravel()
     beta = np.average(beta_list / params.M)
     
     
