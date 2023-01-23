@@ -5,7 +5,7 @@ import numpy as np
 M = 3                   # サイト数
 N_P = 3                 # 1サイトに入れる最大粒子数
 U = 1                   # オンサイトポテンシャル(1に固定)
-J = 0.05                 # ホッピング
+J = 0.5                 # ホッピング
 MU = 0.5                # 化学ポテンシャル
 ETA = 0.03              # 学習率
 
@@ -30,8 +30,8 @@ N_SQRT = np.sqrt(N_SEQ)
 
 paramter_strings = (
     f"site number M:{M}, "
-    f"J:{J}, "
-    f"mu:{MU}, "
+    f"J/U:{J}, "
+    f"mu/U:{MU}, "
     f"HiddenN:{HIDDEN_N}, " 
     f"SampleN:{SAMPLE_N}, "
     f"leraning rate Eta:{ETA}, "

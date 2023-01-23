@@ -1,4 +1,3 @@
-# 以下3行だけ山本加筆
 import sys, os
 from os.path import dirname, abspath
 sys.path.append(dirname(__file__))
@@ -97,9 +96,9 @@ ax4.grid(True)
 ax3 = fig.add_subplot(224)
 ax3.plot(is_K, np.array(Hs_K), label="step1 (K-maximizing)")
 ax3.plot(is_E, np.array(Hs_E), label="step2 (E-minimizing)")
-ax3.set_title("E (energy)")
+ax3.set_title("E/U (energy)")
 ax3.set_xlabel("iter")
-ax3.set_ylabel("E")
+ax3.set_ylabel("E/U")
 ax3.legend()
 ax3.grid(True)
 

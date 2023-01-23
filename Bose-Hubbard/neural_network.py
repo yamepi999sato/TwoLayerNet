@@ -1,4 +1,3 @@
-# 以下3行だけ山本加筆
 import sys, os
 from os.path import dirname, abspath
 sys.path.append(dirname(__file__))
@@ -9,6 +8,10 @@ import parameter as params
 rng = np.random.default_rng()
 
 
+def normalize(psi):
+    norm2 = (psi**2).sum()
+    psi /= np.sqrt(norm2)
+    return norm2
 
 def initialize_weight(opt_class):
     HIDDEN_N = params.HIDDEN_N
