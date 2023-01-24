@@ -77,17 +77,51 @@ fig.suptitle(
     f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
 
 # 各サイトの粒子数n_i
-ax1 = fig.add_subplot(221)
-ax1.plot(np.arange(1, params.M+1), nnn, label="<n>")
-ax1.set_title("<n>")
-ax1.set_xlabel("site")
-ax1.set_ylabel("<n>")
-ax1.set_xticks([1, 2, 3])
-ax1.set_ylim(0, 2.5)
-ax1.legend()
-ax1.grid(True)
+axn = fig.add_subplot(221)
+axn.plot(np.arange(1, params.M+1), nnn, label="<n>")
+axn.set_title("<n>")
+axn.set_xlabel("site")
+axn.set_ylabel("<n>")
+axn.set_xticks([1, 2, 3])
+axn.set_ylim(0, 2.5)
+axn.legend()
+axn.grid(True)
+
+# 重なり積分(K)の収束確認(step2では厳密解と比較)
+axK = fig.add_subplot(223)
+axK.plot(is_K, np.array(Ks_K), label="step1 (K-maximizing)")
+axK.plot(is_E, np.array(Ks_E), label="step2 (E-minimizing)")
+axK.set_title("K (overlap integral)")
+axK.set_xlabel("iter")
+axK.set_ylabel("K")
+axK.legend()
+axK.grid(True)
+
+# エネルギー(E)の収束確認
+axE = fig.add_subplot(222)
+axE.plot(np.arange(params.ITER_NUM_K + params.ITER_NUM_E), (data["E"] * np.ones(params.ITER_NUM_K + params.ITER_NUM_E)), 
+         label="Gutzwiller", color="forestgreen")
+axE.plot(is_K, (np.array(Hs_K)/params.M ), label="step1 (K-maximizing)")
+axE.plot(is_E, (np.array(Hs_E)/params.M ), label="step2 (E-minimizing)")
+axE.set_title("E/U (energy)")
+axE.set_xlabel("iter")
+axE.set_ylabel("E/U")
+axE.legend()
+axE.grid(True)
+
+# Gutzwillerとのエネルギー差
+axeE = fig.add_subplot(224)
+axeE.plot(is_K, np.abs((np.array(Hs_K)/params.M ) - data["E"]), label="step1 (K-maximizing)")
+axeE.plot(is_E, np.abs((np.array(Hs_E)/params.M ) - data["E"]), label="step2 (E-minimizing)")
+axeE.set_title("error of E/U (energy)")
+axeE.set_xlabel("iter")
+axeE.set_ylabel("error of E/U (|newralnetwork - Gutzwiller|)")
+axeE.set_yscale("log")
+axeE.legend()
+axeE.grid(True)
 
 
+"""
 n_1 = np.arange(1, params.N_P+1)
 n_2 = np.arange(1, params.N_P+1)
 n_3 = np.arange(1, params.N_P+1)
@@ -111,9 +145,9 @@ fig.colorbar(mappable, ax=ax)
  
 # 表示する
 plt.show()
+"""
 
-
-
+"""
 # Ψ(n_1, 1, 1)
 nlist_n11 = np.zeros((params.M, params.N_P+1))
 for n in range(params.N_P+1):
@@ -171,7 +205,7 @@ ax2.legend()
 ax2.grid(True)
 
 
-"""
+
 # (1, n_1, 1)
 nlist_1n1 = np.zeros((params.M, params.N_P+1))
 for n in range(params.N_P+1):
@@ -210,40 +244,16 @@ ax2.legend()
 ax2.grid(True)
 """
 
-
-"""
-# 重なり積分(K)の収束確認(step2では厳密解と比較)
-ax4 = fig.add_subplot(222)
-ax4.plot(is_K, np.array(Ks_K), label="step1 (K-maximizing)")
-ax4.plot(is_E, np.array(Ks_E), label="step2 (E-minimizing)")
-ax4.set_title("K (overlap integral)")
-ax4.set_xlabel("iter")
-ax4.set_ylabel("K")
-ax4.legend()
-ax4.grid(True)
-
-# エネルギー(E)の収束確認
-ax3 = fig.add_subplot(224)
-ax3.plot(is_K, (np.array(Hs_K)/params.M ), label="step1 (K-maximizing)")
-ax3.plot(is_E, (np.array(Hs_E)/params.M ), label="step2 (E-minimizing)")
-ax3.plot(np.arange(params.ITER_NUM_K + params.ITER_NUM_E), (data["E"] * np.ones(params.ITER_NUM_K + params.ITER_NUM_E)), label="Gutzwiller")
-ax3.set_title("E/U (energy expectation value)")
-ax3.set_xlabel("iter")
-ax3.set_ylabel("E/U")
-#ax3.set_yscale("log")
-ax3.legend()
-ax3.grid(True)
-"""
 """
 # beta
-ax2 = fig.add_subplot(223)
-ax2.plot(is_K, np.array(beta_K), label="step1 (K-maximizing)")
-ax2.plot(is_E, np.array(beta_E), label="step2 (E-minimizing)")
-ax2.set_title("beta (expectation value of annihilation operator)")
-ax2.set_xlabel("iter")
-ax2.set_ylabel("beta")
-ax2.legend()
-ax2.grid(True)
+axb = fig.add_subplot(223)
+axb.plot(is_K, np.array(beta_K), label="step1 (K-maximizing)")
+axb.plot(is_E, np.array(beta_E), label="step2 (E-minimizing)")
+axb.set_title("beta (expectation value of annihilation operator)")
+axb.set_xlabel("iter")
+axb.set_ylabel("beta")
+axb.legend()
+axb.grid(True)
 """
 
 plt.subplots_adjust(hspace=0.5)
