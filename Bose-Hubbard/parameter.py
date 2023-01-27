@@ -2,7 +2,7 @@ import numpy as np
 
 
 # constants
-M = 3                   # サイト数
+M = 4                   # サイト数
 N_P = 3                 # 1サイトに入れる最大粒子数
 U = 1                   # オンサイトポテンシャル(1に固定)
 J = 0.5                 # ホッピング
@@ -10,9 +10,9 @@ MU = 0.5                # 化学ポテンシャル
 ETA = 0.03              # 学習率
 
 SAMPLE_N = 1000         # 1回の学習に用いるサンプルの個数
-HIDDEN_N = 100           # 隠れ層のユニット数
-ITER_NUM_K = 250        # step1の学習回数
-ITER_NUM_E = 250        # step2の学習回数
+HIDDEN_N = 300           # 隠れ層のユニット数
+ITER_NUM_K = 100        # step1の学習回数
+ITER_NUM_E = 300        # step2の学習回数
 
 
 """相図作成に使用"""

@@ -73,17 +73,19 @@ fig.suptitle(
     "Gutwiller vs neural network\n" +  
     params.paramter_strings + ", "
     f"Optimizer:{weight['w1'].__class__.__name__}, \n"
-    f"ElapsedTime:{time.time()-time_start:.2f}s, "
-    f"date:{datetime.datetime.now().strftime('%Y-%m-%d  %H:%M')}")
+    f"ElapsedTime:{time.time()-time_start:.2f}s")
 
 # 各サイトの粒子数n_i
 axn = fig.add_subplot(221)
+print(nnn.shape)
+print(nnn)
+
 axn.plot(np.arange(1, params.M+1), nnn, label="<n>")
 axn.set_title("<n>")
 axn.set_xlabel("site")
 axn.set_ylabel("<n>")
-axn.set_xticks([1, 2, 3])
-axn.set_ylim(0, 2.5)
+axn.set_xticks([1, 2, 3, 4])
+axn.set_ylim(0, 4)
 axn.legend()
 axn.grid(True)
 

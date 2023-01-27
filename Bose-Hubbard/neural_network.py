@@ -37,7 +37,7 @@ def calc_psi(weight, nlist):
 
 def calc_train_psi(nlist):
     """step1のターゲットとなる状態 n=1に鋭いピークを持つガウシアン"""
-    return np.exp(- ((nlist -1)**2).sum(0)/(2 * 0.5**2) )
+    return np.exp(- ((nlist -2.5)**2).sum(0)/(2 * 0.5**2) )
 
 
 def metropolis(calc_p, randomwalk, sample_n = params.SAMPLE_N, M = params.M):
