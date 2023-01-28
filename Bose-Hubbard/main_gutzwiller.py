@@ -63,7 +63,7 @@ for i in range(params.ITER_NUM_K, params.ITER_NUM_K + params.ITER_NUM_E):
 is_K, Ks_K, Hs_K, beta_K, nnn_K, n_avg_K, ps_K, b2s_K = zip(*iterData_K)
 is_E, Ks_E, Hs_E, beta_E, nnn_E, n_avg_E, ps_E, b2s_E = zip(*iterData_E)
 
-
+    
 
 
 """グラフ化"""
