@@ -7,6 +7,7 @@ import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 import parameter as params
+import random
 
 time_start = time.time()
 """
@@ -57,9 +58,41 @@ for i in range(0, params.M):
 print(nlist_n33)
 """
 
+n_vec = np.zeros((params.M, 1))
+
+random_ab = ["a", "b"]
+random_i = np.arange(0, params.M) 
+random_pm = ["+", "-"]
 
 
+e = np.zeros((params.M, 1))
+i = random.choice(random_i)
+e[i] = 1
+e_i = e
 
+e[i] = 0
+if i+1 < params.M:
+    e[i+1] = 1
+else:
+    e[0] = 1
+e_j = e
+print(i)
+print(e_i)
+print(e_j) 
+"""
+if random.choice(random_ab) == "a":
+    if random.choice(random_pm) == "+":
+        new_n_vec = n_vec + e
+    elif random.choice(random_pm) == "-":
+        new_n_vec = n_vec - e
+elif random.choice(random_ab) == "b":
+    if random.choice(random_pm) == "+":
+        new_n_vec = n_vec + e
+    elif random.choice(random_pm) == "-":
+        new_n_vec = n_vec - e
+print(e)
+print(new_n_vec)
+"""
 from matplotlib import pyplot as plt
 import numpy as np
  

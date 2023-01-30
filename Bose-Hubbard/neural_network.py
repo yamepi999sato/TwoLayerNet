@@ -5,6 +5,7 @@ sys.path.append(dirname(__file__))
 import numpy as np
 import optimizer
 import parameter as params
+import random
 rng = np.random.default_rng()
 
 
@@ -51,6 +52,15 @@ def metropolis(calc_p, randomwalk, sample_n = params.SAMPLE_N, M = params.M):
     while idn < sample_n:
         if randomwalk:
             """ランダムウォークの場合"""
+            random_ab = ["a", "b"]
+            random_i = np.arange(0, params.M) 
+            random_pm = ["+", "-"]
+            e = np.zeros(params.M, 1)
+            r_i = rng.integers(0, params.M)
+            e_i = e + r_i
+            r = rng.random()            
+            if r < 1/4:
+                new_n_vec = n_vec + 
             new_n_vec = n_vec + rng.integers(-np.floor(params.N_P/2), np.floor(params.N_P/2), M, endpoint=True)
             if np.any(n_vec < 0) or np.any(params.N_P < n_vec):
                 n_vec = rng.integers(0, params.N_P, M, endpoint=True)
