@@ -60,68 +60,42 @@ print(nlist_n33)
 
 n_vec = np.zeros((params.M, 1))
 
+
+
 random_ab = ["a", "b"]
 random_i = np.arange(0, params.M) 
 random_pm = ["+", "-"]
 
 
-e = np.zeros((params.M, 1))
+# ここからループ内
+
+ab = random.choice(random_ab)
+pm = random.choice(random_pm)
+e_i = np.zeros((params.M, 1))
+e_j = np.zeros((params.M, 1))
 i = random.choice(random_i)
-e[i] = 1
-e_i = e
 
-e[i] = 0
+print(ab)
+print(pm)
+print("i=" + str(i))
+
+e_i[i] = 1
 if i+1 < params.M:
-    e[i+1] = 1
+    e_j[i+1] = 1
 else:
-    e[0] = 1
-e_j = e
-print(i)
-print(e_i)
-print(e_j) 
-"""
-if random.choice(random_ab) == "a":
-    if random.choice(random_pm) == "+":
-        new_n_vec = n_vec + e
-    elif random.choice(random_pm) == "-":
-        new_n_vec = n_vec - e
-elif random.choice(random_ab) == "b":
-    if random.choice(random_pm) == "+":
-        new_n_vec = n_vec + e
-    elif random.choice(random_pm) == "-":
-        new_n_vec = n_vec - e
-print(e)
-print(new_n_vec)
-"""
-from matplotlib import pyplot as plt
-import numpy as np
- 
-# ランダムな点を生成する(x, y, z座標)
-n_1 = np.arange(0, params.N_P+1)
-n_2 = np.arange(0, params.N_P+1)
+    e_j[0] = 1
 
 
+if ab == "a":
+    if pm == "+":
+        new_n_vec = n_vec + e_i
+    elif pm == "-":
+        new_n_vec = n_vec - e_i
+elif ab == "b":
+    if pm == "+":
+        new_n_vec = n_vec + e_i - e_j
+    elif pm == "-":
+        new_n_vec = n_vec - e_i + e_j
 
 
-n_3 = np.arange(0, params.N_P+1)
-
-# 点(x, y, z)がもつ量
-value = np.random.rand(params.N_P+1)
-#value = np.ones(params.N_P)
-
- 
-# figureを生成する
-fig = plt.figure()
- 
-# axをfigureに設定する
-ax = fig.add_subplot(1, 1, 1, projection='3d')
- 
-# カラーマップを生成
-cm = plt.cm.get_cmap('RdYlBu')
- 
-# axに散布図を描画、戻り値にPathCollectionを得る
-mappable = ax.scatter(n_1, n_2, n_3, c=value, cmap=cm)
-fig.colorbar(mappable, ax=ax)
- 
-# 表示する
-plt.show()
+print("new_n_vec=" + str(new_n_vec))

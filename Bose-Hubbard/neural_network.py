@@ -9,7 +9,6 @@ import random
 rng = np.random.default_rng()
 
 
-
 def normalize(psi):
     norm2 = (psi**2).sum()
     psi /= np.sqrt(norm2)
@@ -49,19 +48,37 @@ def metropolis(calc_p, randomwalk, sample_n = params.SAMPLE_N, M = params.M):
     p = calc_p(n_vec)
     assert np.all(p != np.inf)
     idn = 0
+    random_ab = ["a", "b"]              # a:あるサイトの粒子を1つ増やす(減らす)のみ, b:隣のサイトの粒子も１つ減らす(増やす)
+    random_i = np.arange(0, params.M)   # i:あるサイト
+    random_pm = ["+", "-"]              # +:増やす, -:減らす
     while idn < sample_n:
         if randomwalk:
             """ランダムウォークの場合"""
-            random_ab = ["a", "b"]
-            random_i = np.arange(0, params.M) 
-            random_pm = ["+", "-"]
-            e = np.zeros(params.M, 1)
-            r_i = rng.integers(0, params.M)
-            e_i = e + r_i
-            r = rng.random()            
-            if r < 1/4:
-                new_n_vec = n_vec + 
-            new_n_vec = n_vec + rng.integers(-np.floor(params.N_P/2), np.floor(params.N_P/2), M, endpoint=True)
+            
+            "ランダムでサンプリングする"
+            ab = random.choice(random_ab)
+            pm = random.choice(random_pm)       # 
+            e_i = np.zeros((params.M, 1))
+            e_j = np.zeros((params.M, 1))
+            i = random.choice(random_i)
+
+            e_i[i] = 1
+            if i+1 < params.M:
+                e_j[i+1] = 1
+            else:
+                e_j[0] = 1
+
+            if ab == "a":
+                if pm == "+":
+                    new_n_vec = n_vec + e_i
+                elif pm == "-":
+                    new_n_vec = n_vec - e_i
+            elif ab == "b":
+                if pm == "+":
+                    new_n_vec = n_vec + e_i - e_j
+                elif pm == "-":
+                    new_n_vec = n_vec - e_i + e_j
+
             if np.any(n_vec < 0) or np.any(params.N_P < n_vec):
                 n_vec = rng.integers(0, params.N_P, M, endpoint=True)
                 p = calc_p(n_vec)
